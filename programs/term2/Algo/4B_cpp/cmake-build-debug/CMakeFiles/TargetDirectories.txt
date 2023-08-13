@@ -1,0 +1,3 @@
+D:/programs/Hworks/term2/Algoritms/Labs/4B_cpp/cmake-build-debug/CMakeFiles/4B_cpp.dir
+D:/programs/Hworks/term2/Algoritms/Labs/4B_cpp/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/programs/Hworks/term2/Algoritms/Labs/4B_cpp/cmake-build-debug/CMakeFiles/rebuild_cache.dir
