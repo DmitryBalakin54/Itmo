@@ -1,0 +1,4 @@
+C:\Users\nursu\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\222.4345.21\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=C:/Users/nursu/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/222.4345.21/bin/ninja/win/ninja.exe -G Ninja -S D:\programs\Hworks\term2\C++\lab1 -B D:\programs\Hworks\term2\C++\lab1\cmake-build-debug
+-- Configuring done
+-- Generating done
+-- Build files have been written to: D:/programs/Hworks/term2/C++/lab1/cmake-build-debug

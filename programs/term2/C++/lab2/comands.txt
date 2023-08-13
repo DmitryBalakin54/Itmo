@@ -1,0 +1,8 @@
+gcc.exe -o lab.exe -O2 -D ISAL -I "C:\isa-l-master" -L "C:\isa-l-master" main.c -lisa-l
+
+gcc.exe -o lab.exe -O2 -D ZLIB main.c -lz
+
+gcc.exe -o lab.exe -O2 -D LIBDEFLATE -I "где лежит либа" -L "где лежит либа" main.c -ldeflate
+
+
+./lab.exe in0 in0.pnm

@@ -1,0 +1,3 @@
+D:/programs/Hworks/term2/C++/lab3/cmake-build-debug/CMakeFiles/lab3.dir
+D:/programs/Hworks/term2/C++/lab3/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/programs/Hworks/term2/C++/lab3/cmake-build-debug/CMakeFiles/rebuild_cache.dir

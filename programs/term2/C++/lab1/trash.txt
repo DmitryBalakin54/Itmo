@@ -1,0 +1,288 @@
+
+fc scalar_multiply(const fc *Q, const size_t a_column, const size_t b_column, const size_t n)
+{
+    fc result = 0.0f;
+    for (size_t y = 0; y < n; y++) {
+        result += Q[index_of_matrix(a_column, y, n)] * Q[index_of_matrix(b_column, y, n)];
+    }
+    return result;
+}
+
+
+void proj_maker(const fc *Q, const size_t a_column, const size_t b_column, const size_t n, fc *proj)
+{
+
+    fc first = scalar_multiply(Q, a_column, b_column, n);
+    fc second = scalar_multiply(Q, b_column, b_column, n);
+    if (!filter(second)) {
+        printf("------------- %f -------------", second);
+    }
+    fc scalar = first / second;
+
+
+    for (size_t y = 0; y < n; y++)
+    {
+        proj[y] = scalar * Q[index_of_matrix(b_column, y, n)];
+    }
+}
+
+
+fc len_maker(const fc *Q, const size_t column, const size_t n) {
+    fc res = 0;
+    for (size_t y = 0; y < n; y++)
+    {
+        fc a = Q[index_of_matrix(column, y, n)];
+        res += a * a;
+    }
+    return sqrtf(res);
+}
+
+void make_Q(const fc *A, const size_t n, fc *Q)
+{
+    fc *sub_proj = malloc(sizeof(fc) * n);
+    fc *proj = malloc(sizeof(fc) * n);
+    for (size_t x = 0; x < n; x++)
+    {
+        for (size_t y = 0; y < n; y++) {
+            Q[index_of_matrix(x, y, n)] = A[index_of_matrix(x, y, n)];
+            proj[y] = 0.0f;
+        }
+
+
+        for (size_t y = 0; y < x; y++)
+        {
+            proj_maker(Q, x, y, n, sub_proj);
+            for (size_t i = 0; i < n; i++)
+            {
+                proj[i] += sub_proj[i];
+            }
+        }
+
+        for (size_t y = 0; y < n; y++) {
+            Q[index_of_matrix(x, y, n)] -= proj[y];
+        }
+
+    }
+    free(proj);
+    free(sub_proj);
+    for (size_t x = 0; x < n; x++) {
+        fc len = len_maker(Q, x, n);
+        for (size_t y = 0; y < n; y++) {
+            Q[index_of_matrix(x, y, n)] /= len;
+        }
+    }
+
+
+}
+
+void next_QR_matrix(fc *A, const size_t n)
+{
+    fc *Q = malloc(sizeof (fc) * n * n);
+    make_Q(A, n, Q);
+    fc *new_A = malloc(sizeof(fc) * n * n);
+    for (size_t y = 0; y < n; y++)
+    {
+        for (size_t x = 0; x < n; x++)
+        {
+            fc res = 0;
+            for (size_t i = 0; i < n; i++) {
+                res += A[index_of_matrix(y, i, n)] * Q[index_of_matrix( x, i, n)];
+            }
+            new_A[index_of_matrix(y, x, n)] = res;
+        }
+    }
+
+
+
+    for (size_t y = 0; y < n; y++)
+    {
+        for (size_t x = 0; x < n; x++)
+        {
+            fc res = 0;
+            for (size_t i = 0; i < n; i++) {
+                res += new_A[index_of_matrix(i, y, n)] * Q[index_of_matrix( x, i, n)];
+            }
+            A[index_of_matrix(x, y, n)] = res;
+
+            //A[index_of_matrix(x, y, n)] = filter(A[index_of_matrix(x, y, n)]);
+        }
+    }
+
+
+
+    free(new_A);
+    free(Q);
+}
+
+
+
+void QR_algorithm(fc *A, size_t n)
+{
+    for (size_t i = 0; i < 100; i++)
+    {
+        next_QR_matrix(A, n);
+    }
+}
+
+////////////////////////////////////////////////////////////
+
+void matrix_multiply(const fc *A, const fc *B, fc *C, size_t n)
+{
+    for (size_t y = 0; y < n; y++)
+    {
+        for (size_t x = 0; x < n; x++)
+        {
+            fc res = 0;
+            for (size_t i = 0; i < n; i++)
+            {
+                res += A[index_of_matrix(i, y, n)] * B[index_of_matrix( x, i, n)];
+            }
+            C[index_of_matrix(x, y, n)] = res;
+        }
+    }
+}
+
+
+
+
+
+fc vector_len_sqr(const fc *vector, size_t n)
+{
+    fc len = 0;
+    for (size_t i = 0; i < n; i++)
+    {
+        len += vector[i] * vector[i];
+    }
+
+    return len;
+}
+
+fc vector_len(const fc *vector, size_t n)
+{
+    return sqrtf(vector_len_sqr(vector, n));
+}
+
+
+void Householder_algorithm(fc **A_, size_t n, fc **Q_, fc **R_, fc **P_, fc **next_R_, fc **next_Q_, fc **vector_u_, fc **tmp_)
+{
+
+    fc *A = *A_;
+    fc *Q = *Q_;
+    fc *R = *R_;
+    fc *P = *P_;
+    fc *next_R = *next_R_;
+    fc *next_Q = *next_Q_;
+    fc *vector_u = *vector_u_;
+    fc *tmp = *tmp_;
+
+
+    tmp = R;
+    R = A;
+    A = tmp;
+    tmp = NULL;
+
+    for (int x = 0; x < n; x++)
+    {
+        for (int y = 0; y < n; y++)
+        {
+            Q[index_of_matrix(x, y, n)] = x == y ? 1 : 0;
+        }
+    }
+
+    for (size_t i = 0; i < n - 1; i++)
+    {
+        for (size_t j = 0; j < n; j++)
+        {
+            if (j < i)
+            {
+                vector_u[j] = 0;
+            } else
+            {
+                vector_u[j] = R[index_of_matrix(i, j, n)];
+            }
+        }
+        vector_u[i] -= vector_len(vector_u, n);
+
+
+        fc coefficient = -2 / vector_len_sqr(vector_u, n);
+
+        for (size_t x = 0; x < n; x++)
+        {
+            for (size_t y = 0; y < n; y++)
+            {
+                fc res = coefficient *  vector_u[x] * vector_u[y];
+                P[index_of_matrix(x, y, n)] = isnan(res) ? 0 : res;
+
+                if (x == y)
+                {
+                    P[index_of_matrix(x, y, n)] += 1;
+                }
+
+            }
+        }
+
+        matrix_multiply(P, R, next_R, n);
+
+        tmp = R;
+        R = next_R;
+        next_R = tmp;
+        tmp = NULL;
+
+        matrix_multiply(Q, P, next_Q, n);
+
+        tmp = Q;
+        Q = next_Q;
+        next_Q = tmp;
+        tmp = NULL;
+
+    }
+
+
+    matrix_multiply(R, Q, A, n);
+
+    *A_ = A;
+    *Q_ = Q;
+    *R_ = R;
+    *P_ = P;
+    *next_R_ = next_R;
+    *next_Q_ = next_Q;
+    *vector_u_ = vector_u;
+    *tmp_ = tmp;
+}
+
+
+void Householder_QR_algorithm(fc **A_, size_t n, size_t max_iteration)
+{
+    fc *Q = malloc(sizeof(fc) * n * n);
+    fc *R = malloc(sizeof(fc) * n * n);
+    fc *P = malloc(sizeof(fc) * n * n);
+    fc *next_R = malloc(sizeof(fc) * n * n);
+    fc *next_Q = malloc(sizeof(fc) * n * n);
+    fc *vector_u = malloc(sizeof(fc) * n);
+    fc *tmp = NULL;
+    fc *A = *A_;
+
+
+    for (size_t iteration = 0; iteration < max_iteration; iteration++)
+    {
+        if (iteration < max_iteration * 1 / 10)
+        {
+            Householder_algorithm(&A, n, &Q, &R, &P, &next_R, &next_Q, &vector_u, &tmp);
+            continue;
+        }
+        fc value = A[index_of_matrix(n - 1, n - 1, n)];
+        shift(A, n, -value);
+        Householder_algorithm(&A, n, &Q, &R, &P, &next_R, &next_Q, &vector_u, &tmp);
+        shift(A, n, value);
+    }
+
+    free(Q);
+    free(R);
+    free(P);
+    free(next_Q);
+    free(next_R);
+    free(vector_u);
+
+    *A_ = A;
+}
+/////////////////////////////////////////////////////
