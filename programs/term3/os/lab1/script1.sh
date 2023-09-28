@@ -2,13 +2,11 @@
 
 val=$1
 
-for i in $2 $3
-do
+for i in $2 $3 ;do
 
-if [[ $val -le $i ]]
-then
-val=$i
-fi
+    if [[ $val -le $i ]] ;then
+        val=$i
+    fi
 
 done
 

@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-if [[ "$HOME" == "$PWD" ]]
-then
+if [[ "$HOME" == "$PWD" ]]; then
 
-echo "$HOME"
-exit 0
+    echo "$HOME"
+    exit 0
 
 fi
 
