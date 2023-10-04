@@ -3,13 +3,11 @@
 
 s=""
 read s
-res="$s"
 
-while [[ "$s" != "q" ]]
-do
+while [[ "$s" != "q" ]]; do
 
-read s
-res="$res $s"
+    res+=$s
+    read s
 
 done
 

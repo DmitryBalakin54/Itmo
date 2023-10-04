@@ -1,26 +1,37 @@
 #!/usr/bin/env bash
 
-echo "1: open nano"
-echo "2: open vi"
-echo "3: open links"
-echo "4: exit"
-echo "enter the command number"
+while true; do
+    echo "1: open nano"
+    echo "2: open vi"
+    echo "3: open links"
+    echo "4: exit"
+    echo "enter the command number"
 
-cmd=""
-read cmd
+    cmd=""
+    read cmd
 
-case $cmd in
+    case $cmd in
 
-"1")
-nano
-;;
+        "1")
+	nano
+	;;
 
-"2")
-vi
-;;
+	"2")
+	vi
+	;;
 
-"3")
-links
-;;
+	"3")
+	links
+	;;
 
-esac
+	"4")
+	exit
+	;;
+
+	*)
+	echo "try again"
+	;;
+
+    esac
+
+done
