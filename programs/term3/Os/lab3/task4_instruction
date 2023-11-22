@@ -1,0 +1,4 @@
+1. ./script4_make.sh
+2. top
+3. ./script4.sh
+4. ./script4_kill.sh #чтоб почистить за собой
