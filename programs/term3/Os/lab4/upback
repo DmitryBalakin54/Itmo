@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+folder="$HOME/restore/"
+folders=$(ls $HOME/*/ | grep -o -E "Backup-[0-9]{4}-[0-9]{2}-[0-9]{2}")
+last_folder="$HOME/$(echo "$folders" | tail -1)"
+
+if [[ ! -d "$last_folder" ]]; then
+    exit 0
+fi
+
+
+if [[ ! -d "$folder" ]]; then
+    mkdir "$folder"
+fi
+
+
+cd "$last_folder"
+
+files=$(find . -type f | grep -E -v ".[0-9]{4}-[0-9]{2}-[0-9]{2}")
+
+for file in $files; do
+    if [[ -d "$folder/$file" ]]; then
+        rm -r -f "$folder/$file"
+    fi
+
+    cp --parents "$file" "$folder/"
+done
