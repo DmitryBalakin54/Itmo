@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+
+trash="$HOME/trash"
+log="$HOME/.trash_log"
+last_num="$HOME/trash/.last_num"
+
+if [ ! -f "$1" ]; then
+    echo "Error: file $1 doesn't exist" >&2
+    exit 1
+fi
+
+if [ ! -d "$trash" ]; then
+    if [ -f "$trash" ]; then
+        echo "Error: exist file $trash, cannot create directory '$trash'" >&2
+        exit 1
+    fi
+    mkdir "$trash"
+    echo "0" > "$last_num"
+fi
+
+
+name=$(($(cat "$last_num") + 1))
+echo "$name" > "$last_num"
+
+ln "$1" "$trash/$name"
+echo "$(pwd)/$1 $name" >> "$log"
+rm "$1"

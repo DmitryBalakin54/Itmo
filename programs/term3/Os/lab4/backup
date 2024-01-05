@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+source="$HOME/source"
+cd "$source"
+report="$HOME/backup-report"
+
+
+last_date=0
+last_folder=""
+
+folders=$(ls $HOME/*/ | grep -o -E "Backup-[0-9]{4}-[0-9]{2}-[0-9]{2}")
+
+if [[ $folders ]]; then
+    last_folder=$(echo "$folders" | tail -1)
+    last_date=$(echo "$last_folder" | grep -o -E "[0-9]{4}-[0-9]{2}-[0-9]{2}")
+    last_day=$(date -d $last_date +%s)
+fi
+
+cur_date=`date +%Y-%m-%d`
+cur_day=$(date -d $cur_date +%s)
+
+
+created=false
+
+if [[ $cur_day -gt $last_day+7*24*60*60 ]]; then
+    folder="$HOME/Backup-$cur_date"
+    mkdir $folder
+    created=true
+else
+    folder="$HOME/$last_folder"
+fi
+
+
+files=$(find . -type f)
+flag=true
+
+
+if [[ $created = true ]]; then
+    echo -n "$folder created at $cur_date [ " >> $report
+
+    for file_name in $files; do
+        cp --parents "$file_name" "$folder/"
+        echo -n "$(cut -d/ -f2 <<< $file_name) ">> $report
+    done
+
+    echo "]" >> $report
+else
+    for file_name in $files; do
+        if [[ ! -e "$folder/$file_name" ]]; then
+            if [[ "$flag" = true ]]; then
+                echo "$folder was supplemented at $cur_date" >> $report
+                flag=false
+            fi
+
+            cp --parents "$file_name" "$folder/"
+            echo "$(cut -d/ -f2 <<< $file_name)" >> $report
+        fi
+    done
+
+    for file_name in $files; do
+        if [[ -e "$folder/$file_name" ]]; then
+            if [[ $(stat -c%s "$folder/$file_name") -ne $(stat -c%s "$source/$file_name") ]]; then
+		if [[ $flag = true ]]; then
+                    echo "$folder was supplemented at $cur_date" >> $report
+                    flag=false
+                fi
+                mv "$folder/$file_name" "$folder/$file_name.$cur_date"
+                cp "$source/$file_name" "$folder/$file_name"
+
+                echo "$(cut -d/ -f2 <<< $file_name) $(cut -d/ -f2 <<< $file_name).$cur_date" >> $report
+            fi
+        fi
+    done
+fi

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+trash="$HOME/trash"
+log="$HOME/.trash_log"
+
+while read l; do
+    file="$(echo "$l" | awk '{print $1}')"
+    last_ln="$trash/$(echo "$l" | awk '{print $2}')"
+
+    if [ -n "$(echo "$file" | grep "$1$")" ] && [ -f "$last_ln" ]; then
+        read -u 3 -p "Untrash $file?[y/n] " -r
+
+        if [[ "$REPLY" =~ ^[yY]$ ]]; then
+            if [[ ! -d "$(dirname "$file")" ]]; then
+                new_dir=$HOME
+		echo "Warning: New directory is $new_dir"
+            else
+                new_dir=$(dirname "$file")
+            fi
+
+            new_path="$new_dir/$(basename "$file")"
+
+            while [ -f "$new_path" ]; do
+                read -u 3 -p "$new_path exists, enter a new name: " -r
+                new_path="$new_dir/$REPLY"
+            done
+
+            ln "$last_ln" "$new_path"
+            rm "$last_ln"
+        fi
+    fi
+done 3<&0 < "$log"
