@@ -8,7 +8,7 @@ calculate_pi() {
         x=$(bc -l <<< "scale=10; $RANDOM / 32767")
         y=$(bc -l <<< "scale=10; $RANDOM / 32767")
         distance=$(bc -l <<< "scale=10; sqrt($x * $x + $y * $y)")
-        
+
         if (( $(bc <<< "$distance <= 1") == 1 )); then
             ((count++))
         fi
@@ -18,6 +18,6 @@ calculate_pi() {
     echo "$pi"
 }
 
-result=$(calculate_pi 1000000)
+result=$(calculate_pi $((200 + $1)))
 echo "Pi is approximately $result"
 

@@ -1,11 +1,12 @@
 #!/bin/bash
 
-ALGO_RUNNER="/path/to/runner.sh"  # Путь к скрипту запуска алгоритма
-OUTPUT_FILE="execution_times_parallel.txt"
-
+ALGO_RUNNER="./algo.sh"
+OUTPUT_FILE="./res2.log"
+: > "./res2.log"
 for ((N = 1; N <= 20; N++)); do
+    echo "" >> "$OUTPUT_FILE"
+    echo "$N" >> "$OUTPUT_FILE"
     for ((i = 1; i <= 10; i++)); do
-        # Замер времени с помощью утилиты time для N вычислений в фоне
-        { time $ALGO_RUNNER $N; } 2>&1 | grep real | cut -d ' ' -f 2 >> "$OUTPUT_FILE"
+        { time $ALGO_RUNNER $N; } 2>&1 | grep "real" | awk '{print $2}' | cut -c 3- | rev | cut -c 2- | rev  >> "$OUTPUT_FILE"
     done
 done
