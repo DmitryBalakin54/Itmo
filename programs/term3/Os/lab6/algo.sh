@@ -1,17 +1,23 @@
 #!/bin/bash
 
-calculate_sum_of_squares() {
-    local n=$(($1 * $1 * $1 * $1))
-    local sum=0
+calculate_pi() {
+    local iterations=$1
+    local count=0
 
-    for ((i = 1; i <= n; i++)); do
-        square=$((i * i))
-        sum=$((sum + square))
+    for ((i = 0; i < iterations; i++)); do
+        x=$(bc -l <<< "scale=10; $RANDOM / 32767")
+        y=$(bc -l <<< "scale=10; $RANDOM / 32767")
+        distance=$(bc -l <<< "scale=10; sqrt($x * $x + $y * $y)")
+        
+        if (( $(bc <<< "$distance <= 1") == 1 )); then
+            ((count++))
+        fi
     done
 
-    echo "$sum"
+    pi=$(bc -l <<< "scale=10; 4 * $count / $iterations")
+    echo "$pi"
 }
 
-N=$1
-result=$(calculate_sum_of_squares "$N")
-echo "Результат вычисления суммы квадратов от 1 до $(($N * $N * $N * $N)): $result"
+result=$(calculate_pi 1000000)
+echo "Pi is approximately $result"
+
