@@ -18,6 +18,6 @@ calculate_pi() {
     echo "$pi"
 }
 
-result=$(calculate_pi $((200 + $1)))
+result=$(calculate_pi $((10 * $1)))
 echo "Pi is approximately $result"
 
