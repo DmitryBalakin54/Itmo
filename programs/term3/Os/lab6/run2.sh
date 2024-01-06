@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ALGO_RUNNER="./algo.sh"
+ALGO_RUNNER="./test2.sh"
 OUTPUT_FILE="./res2.log"
 : > "./res2.log"
 for ((N = 1; N <= 20; N++)); do
