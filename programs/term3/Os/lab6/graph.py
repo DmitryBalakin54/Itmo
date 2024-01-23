@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
+coef = 10
 arr1: list[float] = []
 with open('res1.log', 'r') as file:
     pars = file.read()[1:].split('\n\n')
     for par in pars:
-        arr1.append(sum(map(float, (i if i else 0 for i in par.split('\n')[1:]))) / 10)
+        arr1.append(coef * sum(map(float, (i if i else 0 for i in par.split('\n')[1:]))) / 10)
     arr1 = arr1[:-1]
     print(arr1)
 
