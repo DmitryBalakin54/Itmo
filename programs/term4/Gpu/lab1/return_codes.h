@@ -1,0 +1,81 @@
+#pragma once
+
+#ifndef SUCCESS
+
+#define SUCCESS 0
+#endif
+
+#ifndef ERROR_INCORRECT_ARGUMENTS
+
+#define ERROR_INCORRECT_ARGUMENTS 1
+#endif
+
+#ifndef ERROR_OUT_OF_MEMORY
+
+#define ERROR_OUT_OF_MEMORY 2
+#endif
+
+#ifndef ERROR_WITH_FILE
+
+#define ERROR_WITH_FILE 3
+#endif
+
+#ifndef ERROR_CL_GET_PLATFORM_IDS
+
+#define ERROR_CL_GET_PLATFORM_IDS 4
+#endif
+
+#ifndef ERROR_CL_GET_DEVICE_IDS
+
+#define ERROR_CL_GET_DEVICE_IDS 5
+#endif
+
+#ifndef ERROR_CL_GET_PLATFORM_INFO
+
+#define ERROR_CL_GET_PLATFORM_INFO 6
+#endif
+
+#ifndef ERROR_CL_GET_DEVICE_INFO
+
+#define ERROR_CL_GET_DEVICE_INFO 7
+#endif
+
+#ifndef ERROR_CL_NO_REQUIRED_DEVICE
+
+#define ERROR_CL_NO_REQUIRED_DEVICE 8
+#endif
+
+#ifndef ERROR_CL_GET_PROFILING_INFO
+
+#define ERROR_CL_GET_PROFILING_INFO 9
+#endif
+
+#ifndef ERROR_CL_CREATE
+
+#define ERROR_CL_CREATE 10
+#endif
+
+#ifndef ERROR_CL_BUILD_PROGRAM
+
+#define ERROR_CL_BUILD_PROGRAM 11
+#endif
+
+#ifndef ERROR_CL_WRITE_BUFFER
+
+#define ERROR_CL_WRITE_BUFFER 12
+#endif
+
+#ifndef ERROR_CL_SET_ARG
+
+#define ERROR_CL_SET_ARG 13
+#endif
+
+#ifndef ERROR_CL_RUNNING_KERNEL
+
+#define ERROR_CL_RUNNING_KERNEL 15
+#endif
+
+#ifndef ERROR_CL_READ_BUFFER
+
+#define ERROR_CL_READ_BUFFER 16
+#endif
