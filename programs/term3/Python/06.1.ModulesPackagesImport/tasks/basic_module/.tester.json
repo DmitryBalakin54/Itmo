@@ -1,0 +1,4 @@
+{
+    "module_test": true,
+    "explicit_public_tests": ["tests"]
+}

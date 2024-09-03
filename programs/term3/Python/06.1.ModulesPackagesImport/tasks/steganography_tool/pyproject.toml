@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools >= 61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = 'steganography_tool'
+description = "summary"
+requires-python = ">=3.8"
+version = "0.0.1"
+authors = [{name = 'Dmitry Balakin', email = 'nursultan54@yandex.ru'}]
+dependencies = [
+    'click',
+    'Pillow'
+]
+
+[project.scripts]
+steganography-tool = "steganography_tool.cli:steganography_tool"
+
+[tool.setuptools.package-data]
+steganography_tool = ["lenna.png"]
+
+[tool.setuptools.packages.find]
+include = ["steganography_tool*"]

@@ -1,0 +1,4 @@
+{
+    "explicit_public_tests": ["conftest.py"],
+    "run_mypy": false
+}

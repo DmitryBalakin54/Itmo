@@ -1,0 +1,4 @@
+{
+  "explicit_public_tests": ["socket_test_servers", "conftest.py"],
+  "explicit_private_tests": ["private_server_wordlist.txt", "server.py"]
+}

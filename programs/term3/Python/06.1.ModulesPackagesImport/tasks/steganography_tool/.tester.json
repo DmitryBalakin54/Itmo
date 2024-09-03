@@ -1,0 +1,6 @@
+{
+    "module_test": true,
+    "build_wheel": true,
+    "test_timeout": 120,
+    "explicit_public_tests": ["test_module.py", "test_cli.py"]
+}

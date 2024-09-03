@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: steganography-tool
+Version: 0.0.1
+Summary: summary
+Author-email: Dmitry Balakin <nursultan54@yandex.ru>
+Requires-Python: >=3.8
+Requires-Dist: click
+Requires-Dist: Pillow

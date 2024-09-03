@@ -1,0 +1,4 @@
+{
+    "explicit_public_tests": ["memory_watchdog.py"],
+    "test_timeout": 30
+}

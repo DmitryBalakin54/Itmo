@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: simple-pass-manager
+Version: 1.0
+Summary: summary
+Author: Dmitry Balakin
+Author-email: nursultan54@yandex,ru
+Requires-Dist: cryptography

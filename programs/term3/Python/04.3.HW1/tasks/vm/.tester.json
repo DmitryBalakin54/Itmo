@@ -1,0 +1,4 @@
+{
+    "explicit_public_tests": ["vm_runner.py", "vm_scorer.py", "cases.py", "function_type_ban.py", "conftest.py"],
+    "partially_scored": true
+}
