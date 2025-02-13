@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ImageProcessorTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2024-12-21T22:54:13" hostname="DESKTOP-S8JKGS7" time="0.992">
+  <properties/>
+  <testcase name="simpleGeneration()" classname="ImageProcessorTest" time="0.211"/>
+  <testcase name="simpleParallelSequentialGeneration()" classname="ImageProcessorTest" time="0.269"/>
+  <testcase name="simpleParallelGeneration()" classname="ImageProcessorTest" time="0.009"/>
+  <testcase name="testMore()" classname="ImageProcessorTest" time="0.242"/>
+  <testcase name="parallelLimit()" classname="ImageProcessorTest" time="0.014"/>
+  <testcase name="cacheSimple()" classname="ImageProcessorTest" time="0.114"/>
+  <testcase name="cacheMultiple()" classname="ImageProcessorTest" time="0.123"/>
+  <system-out><![CDATA[done 3
+done 7
+done 5
+done 0
+done 8
+done 18
+done 10
+done 9
+done 12
+done 11
+done 14
+done 6
+done 2
+done 17
+done 1
+done 4
+done 15
+done 13
+done 16
+done 19
+done
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Tests" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-10-06T20:03:52" hostname="DESKTOP-S8JKGS7" time="0.973">
+  <properties/>
+  <testcase name="test1ConstructorWithAmount" classname="Tests" time="0.935"/>
+  <testcase name="test2ConstructorFailsWithNegativeBalance" classname="Tests" time="0.005"/>
+  <testcase name="test3DepositShouldWorkCorrectly" classname="Tests" time="0.02"/>
+  <testcase name="test4WithdrawShouldWorkCorrectly" classname="Tests" time="0.009"/>
+  <testcase name="test5BalanceShouldHaveNotPublicSetter" classname="Tests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[WARNING: A Java agent has been loaded dynamically (C:\Users\DmitryBalakin\.gradle\caches\modules-2\files-2.1\net.bytebuddy\byte-buddy-agent\1.14.17\e3c251a39dc90badaf71c83427ba46840f219d8d\byte-buddy-agent-1.14.17.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+]]></system-err>
+</testsuite>

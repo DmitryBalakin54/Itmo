@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="SequentialProcessorTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-11-17T06:39:55" hostname="DESKTOP-S8JKGS7" time="3.253">
+  <properties/>
+  <testcase name="testCorrectness()" classname="SequentialProcessorTest" time="0.426"/>
+  <testcase name="testParallel()" classname="SequentialProcessorTest" time="1.146"/>
+  <testcase name="testLaunchInCommonThread()" classname="SequentialProcessorTest" time="0.723"/>
+  <testcase name="testLinearizability()" classname="SequentialProcessorTest" time="0.739"/>
+  <testcase name="testResourceLeaks()" classname="SequentialProcessorTest" time="0.214"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

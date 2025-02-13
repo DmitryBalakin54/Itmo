@@ -1,0 +1,133 @@
+package ru.itmo.wp.model.repository;
+
+import com.google.common.base.Strings;
+import ru.itmo.wp.model.database.DatabaseUtils;
+import ru.itmo.wp.model.exception.RepositoryException;
+
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public abstract class AbstractRepository<T> {
+    protected final DataSource DATA_SOURCE = DatabaseUtils.getDataSource();
+
+    protected abstract T toEntity(ResultSetMetaData metaData, ResultSet resultSet) throws SQLException;
+    protected abstract String getTableName();
+    protected abstract String getSaveQuery();
+    protected abstract void setSaveStatementParams(PreparedStatement statement, T entity, Map<String, Object> params) throws SQLException;
+
+    public T find(long id) {
+        String query = "SELECT * FROM " + getTableName() + " WHERE id=?";
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setLong(1, id);
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return toEntity(statement.getMetaData(), resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Can't find entity.", e);
+        }
+    }
+
+    public T findBy(Map<String, Object> params) {
+        String query = genSqlRequest(params, "AND");
+
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                int index = 1;
+                for (Object value : params.values()) {
+                    statement.setObject(index++, value);
+                }
+
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    return toEntity(statement.getMetaData(), resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Can't find " + getTableName() + " with specified parameters.", e);
+        }
+    }
+
+    private List<T> findAllBy(Map<String, Object> params, String ordered, String op) {
+        String query = genSqlRequest(params, op);
+        if (ordered != null) {
+            query += " ORDER BY " + ordered;
+        }
+
+
+
+        List<T> list = new ArrayList<>();
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                int index = 1;
+                for (Object value : params.values()) {
+                    statement.setObject(index++, value);
+                }
+
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    T entity;
+                    while ((entity = toEntity(statement.getMetaData(), resultSet)) != null) {
+                        list.add(entity);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Can't find " + getTableName() + " with specified parameters.", e);
+        }
+        return list;
+    }
+
+    public List<T> findAllByAny(Map<String, Object> params, String ordered) {
+        return findAllBy(params, ordered, "OR");
+    }
+
+    public List<T> findAllByAll(Map<String, Object> params, String ordered) {
+        return findAllBy(params, ordered, "AND");
+    }
+
+    private String genSqlRequest(Map<String, Object> params, String logicOp) {
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM ");
+        queryBuilder.append(getTableName());
+
+        if (!params.isEmpty()) {
+            queryBuilder.append(" WHERE ");
+            queryBuilder.append(
+                    params.keySet().stream()
+                            .map(key -> key + " = ?")
+                            .collect(Collectors.joining(" " + logicOp + " "))
+            );
+        }
+
+        return queryBuilder.toString();
+    }
+
+    public List<T> findAll() {
+        return findAllByAny(Map.of(), null);
+    }
+
+    public void save(T entity, Map<String, Object> params) throws RepositoryException {
+        try (Connection connection = DATA_SOURCE.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(getSaveQuery(), Statement.RETURN_GENERATED_KEYS)) {
+                setSaveStatementParams(statement, entity, params);
+                if (statement.executeUpdate() != 1) {
+                    throw new RepositoryException("Can't save " + getTableName() + ".");
+                }
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        setGeneratedIdAndTime(entity, generatedKeys.getLong(1));
+                    } else {
+                        throw new RepositoryException("Can't save " + getTableName() + " [no autogenerated fields].");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Can't save " + getTableName() + ".", e);
+        }
+    }
+
+    protected abstract void setGeneratedIdAndTime(T entity, long generatedId) throws SQLException;
+}

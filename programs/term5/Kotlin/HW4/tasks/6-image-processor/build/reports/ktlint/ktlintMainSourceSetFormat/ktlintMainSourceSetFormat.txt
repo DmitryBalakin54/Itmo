@@ -1,0 +1,4 @@
+[90mC:\Users\DmitryBalakin\reps\Kotlin\HW4\kotlin-2024-4-coroutines-DmitryBalakin54\tasks\6-image-processor\src\[0mImageProcessor.kt[90m:[0m10[90m:42:[0m Missing trailing comma before ")" [90m(standard:trailing-comma-on-declaration-site)[0m
+
+Summary error count (descending) by rule:
+  standard:trailing-comma-on-declaration-site: 1

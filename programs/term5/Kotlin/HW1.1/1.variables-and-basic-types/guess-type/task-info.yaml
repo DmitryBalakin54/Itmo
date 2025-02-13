@@ -1,0 +1,71 @@
+type: edu
+files:
+  - name: src/Task.kt
+    visible: true
+    placeholders:
+      - offset: 45
+        length: 3
+        placeholder_text: Any
+        initial_state:
+          length: 3
+          offset: 45
+        initialized_from_dependency: false
+        encrypted_possible_answer: 73icFv6bNeE6A/Uec8aL/g==
+        selected: false
+        status: Unchecked
+      - offset: 89
+        length: 3
+        placeholder_text: Any
+        initial_state:
+          length: 3
+          offset: 89
+        initialized_from_dependency: false
+        encrypted_possible_answer: 73icFv6bNeE6A/Uec8aL/g==
+        selected: false
+        status: Unchecked
+      - offset: 135
+        length: 3
+        placeholder_text: Any
+        initial_state:
+          length: 3
+          offset: 135
+        initialized_from_dependency: false
+        encrypted_possible_answer: 73icFv6bNeE6A/Uec8aL/g==
+        selected: false
+        status: Unchecked
+      - offset: 186
+        length: 3
+        placeholder_text: Any
+        initial_state:
+          length: 3
+          offset: 186
+        initialized_from_dependency: false
+        encrypted_possible_answer: 73icFv6bNeE6A/Uec8aL/g==
+        selected: false
+        status: Unchecked
+      - offset: 250
+        length: 3
+        placeholder_text: Any
+        initial_state:
+          length: 3
+          offset: 250
+        initialized_from_dependency: false
+        encrypted_possible_answer: 73icFv6bNeE6A/Uec8aL/g==
+        selected: false
+        status: Unchecked
+      - offset: 388
+        length: 3
+        placeholder_text: Any
+        initial_state:
+          length: 3
+          offset: 388
+        initialized_from_dependency: false
+        encrypted_possible_answer: 73icFv6bNeE6A/Uec8aL/g==
+        selected: false
+        status: Unchecked
+    learner_created: false
+  - name: test/Tests.kt
+    visible: true
+    learner_created: false
+status: Unchecked
+record: -1

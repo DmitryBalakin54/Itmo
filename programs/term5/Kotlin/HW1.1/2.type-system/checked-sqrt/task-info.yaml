@@ -1,0 +1,33 @@
+type: edu
+files:
+  - name: src/Task.kt
+    visible: true
+    placeholders:
+      - offset: 0
+        length: 223
+        placeholder_text: |-
+          import kotlin.math.sqrt
+          
+          fun failNegativeValue() {
+              throw ArithmeticException("sqrt with negative value")
+          }
+          
+          fun checkedSqrt(x: Double): Double {
+              if (x >= 0.0) {
+                  return sqrt(x)
+              }
+              failNegativeValue()
+          }
+        initial_state:
+          length: 223
+          offset: 0
+        initialized_from_dependency: false
+        encrypted_possible_answer: E1SJj7jPmwPW/Y8TGBLEktpaT5k6YDsPCgdeRrfPy+vlwmJ5rIDIL3EnuDuhh0QSJhz9sLyMkH0TZe+124+tJytbf8IEXdib+achyHRcqaFjAwZw22uBGrvIaM7ZxQ1j05HZlKAYWlw30fWCQ4d8xN3NZKD2e0NuJEi10AvqpXkQZyIt1YVrlRYF8DrYs0QLXVN+ZauGEhYruGUvc+DcINpyJX46KB9So7u5C3FFImx/AsLpthj7kH0hxVukfZAwcGz2J6vZudsdUb26IpIlHK489TNckaHsj1Xvr4MWncRdyu0nlF66w1Y9mhqEVMF1
+        selected: false
+        status: Unchecked
+    learner_created: false
+  - name: test/Tests.kt
+    visible: true
+    learner_created: false
+status: Unchecked
+record: -1

@@ -1,0 +1,7 @@
+curl -v http://wp.codeforces.com/1d1p/
+
+X-Information: Set the header 'X-Secret' with the value '6ff6b3'
+
+curl -H "X-Secret: 6ff6b3" http://wp.codeforces.com/1d1p/
+
+237482042734

@@ -1,0 +1,21 @@
+type: edu
+files:
+  - name: src/Task.kt
+    visible: true
+    placeholders:
+      - offset: 44
+        length: 17
+        placeholder_text: 0// and more code
+        initial_state:
+          length: 17
+          offset: 44
+        initialized_from_dependency: false
+        encrypted_possible_answer: 3Lv3fulEE6TzgpeIxcOWmONZoOok8XoquI69a3lRqbI=
+        selected: false
+        status: Unchecked
+    learner_created: false
+  - name: test/Tests.kt
+    visible: true
+    learner_created: false
+status: Unchecked
+record: -1

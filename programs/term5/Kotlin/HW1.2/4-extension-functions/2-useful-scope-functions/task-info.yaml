@@ -1,0 +1,13 @@
+type: edu
+files:
+  - name: src/Task.kt
+    visible: true
+    learner_created: false
+  - name: test/Tests.kt
+    visible: true
+    learner_created: false
+  - name: src/Utils.kt
+    visible: true
+    learner_created: false
+status: Unchecked
+record: -1

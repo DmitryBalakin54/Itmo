@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="CompletableFutureTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2024-11-17T08:10:25" hostname="DESKTOP-S8JKGS7" time="1.923">
+  <properties/>
+  <testcase name="testAwaitDoneFeature()" classname="CompletableFutureTest" time="0.092"/>
+  <testcase name="testAwaitOne()" classname="CompletableFutureTest" time="0.221"/>
+  <testcase name="testAwaitTwice()" classname="CompletableFutureTest" time="0.211"/>
+  <testcase name="repetition 1 of 5" classname="CompletableFutureTest" time="0.217"/>
+  <testcase name="repetition 2 of 5" classname="CompletableFutureTest" time="0.208"/>
+  <testcase name="repetition 3 of 5" classname="CompletableFutureTest" time="0.209"/>
+  <testcase name="repetition 4 of 5" classname="CompletableFutureTest" time="0.205"/>
+  <testcase name="repetition 5 of 5" classname="CompletableFutureTest" time="0.213"/>
+  <testcase name="testCancelEvaluation()" classname="CompletableFutureTest" time="0.188"/>
+  <testcase name="testCancelEvaluation2()" classname="CompletableFutureTest" time="0.116"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

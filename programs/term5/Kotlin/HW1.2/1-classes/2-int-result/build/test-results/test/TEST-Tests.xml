@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Tests" tests="7" skipped="0" failures="0" errors="0" timestamp="2024-10-06T20:03:54" hostname="DESKTOP-S8JKGS7" time="0.413">
+  <properties/>
+  <testcase name="test1CrateOk" classname="Tests" time="0.004"/>
+  <testcase name="test2CrateError" classname="Tests" time="0.0"/>
+  <testcase name="test3OkMethodsReturnValue" classname="Tests" time="0.002"/>
+  <testcase name="test4ErrorMethodsNotReturnValue" classname="Tests" time="0.001"/>
+  <testcase name="test5SafeRunOk" classname="Tests" time="0.002"/>
+  <testcase name="test6SafeRunError" classname="Tests" time="0.001"/>
+  <testcase name="test7Magic" classname="Tests" time="0.402"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-10-06T20:03:57" hostname="DESKTOP-S8JKGS7" time="0.024">
+  <properties/>
+  <testcase name="testObserve" classname="Test" time="0.021"/>
+  <testcase name="testConstruct" classname="Test" time="0.0"/>
+  <testcase name="testConstructAndUseAsImmutable" classname="Test" time="0.0"/>
+  <testcase name="testObserveSerial" classname="Test" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

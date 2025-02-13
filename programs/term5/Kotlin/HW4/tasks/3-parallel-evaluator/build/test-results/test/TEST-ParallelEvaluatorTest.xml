@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ParallelEvaluatorTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2024-12-21T22:54:27" hostname="DESKTOP-S8JKGS7" time="1.136">
+  <properties/>
+  <testcase name="testOneTask()" classname="ParallelEvaluatorTest" time="0.078"/>
+  <testcase name="testBase()" classname="ParallelEvaluatorTest" time="0.228"/>
+  <testcase name="testFailure()" classname="ParallelEvaluatorTest" time="0.385"/>
+  <testcase name="testCancellation()" classname="ParallelEvaluatorTest" time="0.441"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,30 @@
+type: edu
+files:
+  - name: src/Task.kt
+    visible: true
+    placeholders:
+      - offset: 92
+        length: 18
+        placeholder_text: // Write code here
+        initial_state:
+          length: 18
+          offset: 92
+        initialized_from_dependency: false
+        encrypted_possible_answer: 7UysnET9riyH15KA9q3RYcZR+shFw/+5clYCjVss/j0=
+        selected: false
+        status: Unchecked
+    learner_created: false
+  - name: test/Tests.kt
+    visible: true
+    learner_created: false
+  - name: src/Mailer.java
+    visible: true
+    learner_created: false
+  - name: src/Client.java
+    visible: true
+    learner_created: false
+  - name: src/Contact.java
+    visible: true
+    learner_created: false
+status: Unchecked
+record: -1

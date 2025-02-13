@@ -1,0 +1,8 @@
+[90mC:\Users\DmitryBalakin\reps\Kotlin\HW4\kotlin-2024-4-coroutines-DmitryBalakin54\tasks\7-competition-results\src\[0mCompetitionResults.kt[90m:[0m15[90m:57:[0m Missing newline before "}" [90m(standard:wrapping)[0m
+[90mC:\Users\DmitryBalakin\reps\Kotlin\HW4\kotlin-2024-4-coroutines-DmitryBalakin54\tasks\7-competition-results\src\[0mCompetitionResults.kt[90m:[0m17[90m:6:[0m Missing trailing comma before ")" [90m(standard:trailing-comma-on-call-site)[0m
+[90mC:\Users\DmitryBalakin\reps\Kotlin\HW4\kotlin-2024-4-coroutines-DmitryBalakin54\tasks\7-competition-results\src\[0mCompetitionResults.kt[90m:[0m19[90m:1:[0m Needless blank line(s) [90m(standard:no-consecutive-blank-lines)[0m
+
+Summary error count (descending) by rule:
+  standard:no-consecutive-blank-lines: 1
+  standard:trailing-comma-on-call-site: 1
+  standard:wrapping: 1

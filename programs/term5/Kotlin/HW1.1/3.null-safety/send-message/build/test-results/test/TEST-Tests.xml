@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Tests" tests="5" skipped="0" failures="0" errors="0" timestamp="2024-09-26T00:36:32" hostname="DESKTOP-S8JKGS7" time="0.007">
+  <properties/>
+  <testcase name="testNoSendEmailWithoutContact" classname="Tests" time="0.004"/>
+  <testcase name="testNoSendEmailWithoutClient" classname="Tests" time="0.0"/>
+  <testcase name="testSendCanSendEmailTwice" classname="Tests" time="0.001"/>
+  <testcase name="testSendEmailWithMessage" classname="Tests" time="0.0"/>
+  <testcase name="testSendEmailWithoutMessage" classname="Tests" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
