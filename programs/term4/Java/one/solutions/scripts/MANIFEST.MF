@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: info.kgeorgiy.ja.balakin.implementor.Implementor
-Class-Path: ../../java-advaced-2024/artifacts/info.kgeorgiy.java.advanced.implementor.jar
-Created-By: Dmitry Balakin
