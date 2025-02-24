@@ -1,0 +1,140 @@
+package info.kgeorgiy.ja.balakin.hello;
+
+import info.kgeorgiy.java.advanced.hello.*;
+
+import java.io.IOException;
+import java.net.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Map;
+import java.util.Stack;
+import java.util.concurrent.*;
+
+/**
+ * This class implements {@link HelloServer},this is a UDP server that receives requests and sends responses with Hello.
+ *
+ * @author DmitryBalakin
+ */
+public class HelloUDPServer implements HelloServer {
+    private DatagramSocket socket;
+    private ConcurrentLinkedQueue<Runnable> queue;
+    private int packetBufferSize;
+    private ExecutorService workers;
+    private ExecutorService listener;
+
+
+    final int WORKER_ALIVE_TIME = 10000;
+    private final TimeUnit TIME_UNIT = TimeUnit.MILLISECONDS;
+    final int AWAIT_TERMINATION_TIME = 2000;
+    final int MAX_QUEUE_SIZE = 10000;
+
+    private static boolean checkArgs(int port, int threads) {
+        return port >= 0 && threads > 0;
+    }
+
+    /**
+     * method for running this class from the command line:
+     * HelloUDPServer port [threads].
+     *
+     * @param args command-line arguments: int port, int threads
+     */
+    public static void main(String[] args) {
+        if (args == null) {
+            System.err.println("Arguments is null");
+            return;
+        }
+
+        if (args.length != 2) {
+            System.err.println("Incorrect number of args");
+            return;
+        }
+
+        int port, threads;
+        try {
+            port = Integer.parseInt(args[0]);
+            threads = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            System.err.println("Args must be integer numbers");
+            return;
+        }
+
+        if (!checkArgs(port, threads)) {
+            System.err.println("Incorrect args");
+            return;
+        }
+
+
+        try (var server = new HelloUDPServer()) {
+            server.start(port, threads);
+        }
+    }
+
+    private void init(int port, int threads) throws SocketException {
+        socket = new DatagramSocket(port);
+        packetBufferSize = socket.getReceiveBufferSize();
+        workers = new ThreadPoolExecutor(threads, threads,
+                WORKER_ALIVE_TIME, TIME_UNIT,
+                new ArrayBlockingQueue<>(MAX_QUEUE_SIZE),
+                new ThreadPoolExecutor.DiscardPolicy());
+
+        listener = Executors.newSingleThreadExecutor();
+    }
+
+    private void response(HelloPacketWrapper packet) {
+        var responsePacket = new HelloPacketWrapper(
+                String.format("Hello, %s", packet.toString()),
+                packet.getSocketAddress()
+        );
+
+        try {
+            socket.send(responsePacket.get());
+        } catch (IOException e) {
+            System.err.printf("Error while trying to send: %s%n", e.getMessage());
+        }
+    }
+
+    /**
+     * Starts the UDP server.
+     *
+     * @param port    the port for this server
+     * @param threads the number of worker
+     */
+
+
+    @Override
+    public void start(int port, int threads) {
+        try {
+            init(port, threads);
+        } catch (SocketException e) {
+            System.err.printf("Socket exception %s%n", e.getMessage());
+            return;
+        }
+
+        listener.submit(() -> {
+            while (!socket.isClosed() && !Thread.currentThread().isInterrupted()) {
+                try {
+                    final var packet = new HelloPacketWrapper(packetBufferSize);
+                    socket.receive(packet.get());
+                    workers.submit(() -> response(packet));
+                } catch (IOException e) {
+                    System.err.printf("Receive or submit exception: %s%n", e.getMessage());
+                }
+            }
+        });
+    }
+
+    /**
+     * Closes the UDP server.
+     */
+    @Override
+    public void close() {
+        listener.shutdownNow();
+        workers.shutdownNow();
+        try {
+            var ignoredVar = workers.awaitTermination(AWAIT_TERMINATION_TIME, TIME_UNIT);
+        } catch (InterruptedException ignored) {
+        }
+
+        socket.close();
+    }
+}
