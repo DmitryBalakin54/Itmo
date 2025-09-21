@@ -1,0 +1,96 @@
+sudo apt install dnsutils
+
+dmitry54@dmitry54-VirtualBox:~/hws/HW4$ dig nerc.itmo.ru
+
+; <<>> DiG 9.18.30-0ubuntu0.24.04.2-Ubuntu <<>> nerc.itmo.ru
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 60897
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;nerc.itmo.ru.   IN A
+
+;; ANSWER SECTION:
+nerc.itmo.ru.  4515 IN A 77.234.215.132
+
+;; Query time: 1 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53) (UDP)
+;; WHEN: Wed May 14 20:49:18 MSK 2025
+;; MSG SIZE  rcvd: 57
+
+
+77.234.215.132 - ответ
+
+dig @a.root-servers.net nerc.itmo.ru
+
+dig @a.dns.ripn.net nerc.itmo.ru (https://nerc.itmo.ru/)
+
+dig @ns5.itmo.RU  nerc.itmo.ru (https://nerc.itmo.ru/)
+
+проходимся по первому значению из каждого запроса пока  не увидим только искомый nerc.itmo.ru.
+
+sudo apt install bind9
+
+sudo systemctl enable --now named
+
+sudo nano /etc/bind/named.conf.options
+
+options {
+    directory "/var/cache/bind";
+    recursion yes; 
+    allow-query { any; };  
+    forwarders {
+        8.8.8.8;  
+        1.1.1.1; 
+    };
+};
+
+8.8.8.8 и 1.1.1.1 это гугл и клаудфларе
+
+sudo ip addr add 10.52.1.1/24 dev tap0
+
+sudo systemctl restart named
+
+dig @10.52.1.1 google.com для проверки
+
+sudo nano /etc/bind/named.conf.local
+
+zone "piu4sbripc.localnetwork" {
+    type master;
+    file "/etc/bind/db.piu4sbripc";
+};
+
+sudo nano /etc/bind/db.piu4sbripc
+
+$TTL 86400
+@       IN      SOA     ns.piu4sbripc.localnetwork. noreply.piu4sbripc.localnetwork. (
+                        1          ; Serial
+                        3600       ; Refresh
+                        1800       ; Retry
+                        604800     ; Expire
+                        86400      ; Minimum TTL
+)
+
+@       IN      NS      ns.piu4sbripc.localnetwork.
+@       IN      A       10.52.1.204
+@       IN      AAAA    fd44:1337::1160:6717:1aa5:27fe
+ns      IN      A       10.52.1.1
+
+sudo systemctl restart named
+
+dig @10.52.1.1 piu4sbripc.localnetwork
+
+sudo nano /etc/bind/db.piu4sbripc
+
+@       IN      MX      10 mx.example.org.
+
+sudo systemctl restart named
+
+sudo nano /etc/bind/db.piu4sbripc
+
+r7xw2   IN      AAAA    fd44:1337::3b26:44fe:d266:cff5
+
+sudo systemctl restart named

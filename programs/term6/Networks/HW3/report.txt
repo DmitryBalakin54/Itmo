@@ -1,0 +1,82 @@
+----------
+task1
+
+sudo apt install isc-dhcp-server
+
+echo "authoritative;  <--- пишем в файл .conf конфиг сервера
+default-lease-time 600;
+max-lease-time 7200;
+
+subnet 10.126.207.0 netmask 255.255.255.0 {
+    range 10.126.207.10 10.126.207.254;
+    option routers 10.126.207.1;   <----- A
+    option subnet-mask 255.255.255.0;
+    option domain-name-servers 8.8.8.8;
+    option broadcast-address 10.126.207.255;
+}" | sudo tee /etc/dhcp/dhcpd.conf
+
+
+sudo ip addr add 10.126.207.1/24 dev tap0 <---- добавляем адресс A
+
+echo 'INTERFACESv4="tap0"' | sudo tee /etc/default/isc-dhcp-server <--- указываем что интерфейс сервера tap0
+
+sudo systemctl restart isc-dhcp-server <--- запуск
+sudo systemctl status isc-dhcp-server <--- проверка статуса 
+
+первый чекпоинт готов
+
+
+sudo apt install radvd <--- ставим для SLAAC
+
+echo "interface tap0 { <--- записываем конфиг
+    AdvSendAdvert on;
+    MinRtrAdvInterval 3;
+    MaxRtrAdvInterval 10;
+    prefix fdb0:f2f4:52d8:d8ea::/64 {
+        AdvOnLink on;
+        AdvAutonomous on;
+    };
+};" | sudo tee /etc/radvd.conf
+
+sudo sysctl -w net.ipv6.conf.all.forwarding= <--- включаем форвардинг
+
+sudo systemctl restart radvd <--\
+sudo systemctl status radvd  <---- стартуем и проверяем статус
+
+второй чекпоинт готов
+
+----------
+task2
+
+sudo tcpdump -i tap0 -n -e <---- пишем в отдельном терминале эту команду чтоб видеть логи, будет получено примерно следующее
+
+dmitry54@dmitry54-VirtualBox:~/hws/HW3$ sudo tcpdump -i tap0 -n -e
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on tap0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+22:36:32.024401 12:f0:42:39:3a:14 > 33:33:00:00:00:01, ethertype IPv6 (0x86dd), length 110: fe80::10f0:42ff:fe39:3a14 > ff02::1: ICMP6, router advertisement, length 56
+22:36:32.029616 12:f0:42:39:3a:14 > 33:33:00:00:00:01, ethertype IPv6 (0x86dd), length 110: fe80::10f0:42ff:fe39:3a14 > ff02::1: ICMP6, router advertisement, length 56
+22:36:40.143053 02:2d:e4:62:bf:81 > 33:33:00:00:00:16, ethertype IPv6 (0x86dd), length 90: :: >  <--- в этой строчке мак адрес встречается впервые 
+
+ ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+22:36:40.186736 02:2d:e4:62:bf:81 > 33:33:00:00:00:16, ethertype IPv6 (0x86dd), length 90: :: > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+22:36:40.237768 02:2d:e4:62:bf:81 > 33:33:00:00:00:16, ethertype IPv6 (0x86dd), length 90: :: > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+22:36:40.279955 02:2d:e4:62:bf:81 > 33:33:00:00:00:16, ethertype IPv6 (0x86dd), length 90: :: > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+22:36:40.714155 02:2d:e4:62:bf:81 > 33:33:ff:62:bf:81, ethertype IPv6 (0x86dd), length 86: :: > ff02::1:ff62:bf81: ICMP6, neighbor solicitation, who has fe80::2d:e4ff:fe62:bf81, length 32
+22:36:40.758365 02:2d:e4:62:bf:81 > 33:33:ff:62:bf:81, ethertype IPv6 (0x86dd), length 86: :: > ff02::1:ff62:bf81: ICMP6, neighbor solicitation, who has fe80::2d:e4ff:fe62:bf81, length 32
+22:36:41.035653 02:2d:e4:62:bf:81 > ff:ff:ff:ff:ff:ff, ethertype IPv4 (0x0800), length 396: 0.0.0.0.68 > 255.255.255.255.67: BOOTP/DHCP, Request from 02:2d:e4:62:bf:81, length 354
+22:36:41.036034 12:f0:42:39:3a:14 > 02:2d:e4:62:bf:81, ethertype IPv4 (0x0800), length 342: 10.126.207.1.67 > 10.126.207.11.68: BOOTP/DHCP, Reply, length 300
+22:36:41.041677 02:2d:e4:62:bf:81 > ff:ff:ff:ff:ff:ff, ethertype IPv4 (0x0800), length 396:  0.0.0.0.68 > 255.255.255.255.67: BOOTP/DHCP, Request from 02:2d:e4:62:bf:81, length 354
+22:36:41.042077 12:f0:42:39:3a:14 > 02:2d:e4:62:bf:81, ethertype IPv4 (0x0800), length 342: 10.126.207.1.67 > 10.126.207.11.68: BOOTP/DHCP, Reply, length 300
+22:36:41.047722 02:2d:e4:62:bf:81 > ff:ff:ff:ff:ff:ff, ethertype IPv4 (0x0800), length 403: 0.0.0.0.68 > 255.255.255.255.67: BOOTP/DHCP, Request from 02:2d:e4:62:bf:81, length 361
+22:36:41.047819 02:2d:e4:62:bf:81 > ff:ff:ff:ff:ff:ff, ethertype IPv4 (0x0800), length 403: 0.0.0.0.68 > 255.255.255.255.67: BOOTP/DHCP, Request from 02:2d:e4:62:bf:81, length 361
+22:36:41.062688 12:f0:42:39:3a:14 > 02:2d:e4:62:bf:81, ethertype IPv4 (0x0800), length 342: 10.126.207.1.67 > 10.126.207.11.68: BOOTP/DHCP, Reply, length 300
+22:36:41.062846 12:f0:42:39:3a:14 > 02:2d:e4:62:bf:81, ethertype IPv4 (0x0800), length 342: 10.126.207.1.67 > 10.126.207.11.68: BOOTP/DHCP, Reply, length 300
+22:36:41.091307 02:2d:e4:62:bf:81 > ff:ff:ff:ff:ff:ff, ethertype ARP (0x0806), length 42: Request who-has 10.126.207.11 tell 0.0.0.0, length 28
+22:36:41.136330 02:2d:e4:62:bf:81 > ff:ff:ff:ff:ff:ff, ethertype ARP (0x0806), length 42: Request who-has 10.126.207.11 tell 0.0.0.0, length 28
+22:36:41.200923 02:2d:e4:62:bf:81 > 33:33:00:00:00:16, ethertype IPv6 (0x86dd), length 90: :: > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+22:36:41.245877 02:2d:e4:62:bf:81 > 33:33:00:00:00:16, ethertype IPv6 (0x86dd), length 90: :: > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+22:36:41.714921 02:2d:e4:62:bf:81 > 33:33:00:00:00:16, ethertype IPv6 (0x86dd), length 90: fe80::2d:e4ff:fe62:bf81 > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+22:36:41.756716 02:2d:e4:62:bf:81 > 33:33:00:00:00:16, ethertype IPv6 (0x86dd), length 90: fe80::2d:e4ff:fe62:bf81 > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+22:36:41.756742 02:2d:e4:62:bf:81 > 33:33:00:00:00:02, ethertype IPv6
+
+это не все логи, но в них уже можно увидеть мак адрес 02:2d:e4:62:bf:81 последний чекпоинт готов

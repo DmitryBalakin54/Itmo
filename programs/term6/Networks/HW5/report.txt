@@ -1,0 +1,35 @@
+sudo ip addr change 10.102.157.1/24 dev tap0
+sudo ip addr change 10.144.130.1/24 dev tap1
+
+sudo sysctl -w net.ipv4.ip_forward=1
+
+sudo iptables -F FORWARD сбросить так как до этого набагал
+
+sudo iptables -A FORWARD -i tap0 -o tap1 -p tcp --syn -j ACCEPT разрешаем
+
+sudo iptables -A FORWARD -i tap0 -d 10.144.130.189 -p udp --dport 3001 -j ACCEPT
+sudo iptables -A FORWARD -i tap0 -d 10.144.130.189 -p udp --dport 2728 -j ACCEPT
+sudo iptables -A FORWARD -i tap0 -d 10.144.130.189 -p udp  -j DROP
+
+sudo iptables -A FORWARD -i tap0 -o tap1 -p tcp -m string --string "results-83" --algo bm -j DROP
+
+sudo iptables -t nat -A POSTROUTING -j MASQUERADE работает, но положило весь интернет.......
+sudo iptables -t nat -A POSTROUTING -o tap0 -j MASQUERADE лучше так
+sudo iptables -t nat -A POSTROUTING -o tap1 -j MASQUERADE и так, переделал когда делал последний пункт 
+
+sudo iptables -t mangle -A PREROUTING -i tap0 -p icmp -j TTL --ttl-set 42  ставим 42 а не 41 тк уменьшается на 1
+
+sudo iptables -A FORWARD -i tap0 -o tap1 -p icmp -m statistic --mode random --probability 0.25 -j DROP
+
+host nerc.itmo.ru 8.8.8.8 узнаем(77.234.215.132)
+
+sudo iptables -A FORWARD -i tap0 -o enp0s3 -p udp --dport 53 -j ACCEPT <--dns
+sudo iptables -A FORWARD -i enp0s3 -o tap0 -p udp --sport 53 -j ACCEPT <--dns
+
+sudo iptables -A FORWARD -i tap0 -o enp0s3 -p tcp -d 77.234.215.132 --dport 80 -j ACCEPT
+sudo iptables -A FORWARD -i tap0 -o enp0s3 -p tcp -d 77.234.215.132 --dport 443 -j ACCEPT
+sudo iptables -A FORWARD -i enp0s3 -o tap0 -p tcp -s 77.234.215.132 --sport 80 -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A FORWARD -i enp0s3 -o tap0 -p tcp -s 77.234.215.132 --sport 443 -m state --state ESTABLISHED,RELATED -j ACCEPT
+sudo iptables -A FORWARD -i tap0 -o enp0s3 -p tcp --dport 80 -m string --string "Host: nerc.itmo.ru" --algo bm -j ACCEPT
+sudo iptables -A FORWARD -i tap0 -o enp0s3 -p tcp --dport 443 -m string --string "Host: nerc.itmo.ru" --algo bm -j ACCEPT
+sudo iptables -A FORWARD -i tap0 -o enp0s3 -j DROP

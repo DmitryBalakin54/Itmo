@@ -1,0 +1,49 @@
+Dmitry Balakin
+ProcessLamportMutex
+#actions
+{2 SEND 1} 2, REQ, 1
+{1 SEND 2} 4, OK
+{1 SEND 2} 2, REQ, 1
+{2 SEND 1} 10, REQ, 9
+{2 SEND 1} 8, OK
+{2 SEND 1} 6, REL
+{1 SEND 2} 17, REQ, 16
+{2 SEND 1} 19, OK
+{1 SEND 2} 12, OK
+#process 1
+0 LockRequest
+40 {1 SEND 2} 2, REQ, 1
+80 {1 RCVD 2} 2, REQ, 1
+120 {1 SEND 2} 4, OK
+480 {1 RCVD 2} 10, REQ, 9
+520 {1 SEND 2} 12, OK
+560 {1 RCVD 2} 8, OK
+600 Lock
+640 Unlock
+680 {1 SEND 2} 14, REL
+720 {1 RCVD 2} 6, REL
+760 LockRequest
+800 {1 SEND 2} 17, REQ, 16
+920 {1 RCVD 2} 19, OK
+960 Lock
+1000 Unlock
+1040 {1 SEND 2} 21, REL
+1080 LockRequest
+1120 {1 SEND 2} 23, REQ, 22
+#process 2
+0 LockRequest
+40 {2 SEND 1} 2, REQ, 1
+160 {2 RCVD 1} 4, OK
+200 Lock
+240 Unlock
+280 {2 SEND 1} 6, REL
+320 {2 RCVD 1} 2, REQ, 1
+360 {2 SEND 1} 8, OK
+400 LockRequest
+440 {2 SEND 1} 10, REQ, 9
+840 {2 RCVD 1} 17, REQ, 16
+880 {2 SEND 1} 19, OK
+920 {2 RCVD 1} 12, OK
+960 Lock
+1000 Unlock
+1040 {2 SEND 1} 21, REL

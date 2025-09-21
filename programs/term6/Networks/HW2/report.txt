@@ -1,0 +1,60 @@
+---------
+task1
+
+ubuntu@ubuntu:~/hws/HW2$ sudo dhclient -v tap0
+
+ubuntu@ubuntu:~/hws/HW2$ cat /var/lib/dhcp/dhclient.leases
+lease {
+  interface "tap0";
+  fixed-address 10.205.58.55; <------
+  option subnet-mask 255.255.255.0; <---------
+  option dhcp-lease-time 120;
+  option routers 10.205.58.254;
+  option dhcp-message-type 5;
+  option dhcp-server-identifier 10.205.58.254;
+  option domain-name-servers 1.1.1.1;
+  option domain-search "vibrant-audience.com."; <---------
+  option dhcp-renewal-time 60;
+  option dhcp-rebinding-time 105;
+  option broadcast-address 10.205.58.255;
+  option host-name "ubuntu";
+  renew 2 2025/04/22 19:07:03;
+  rebind 2 2025/04/22 19:07:52;
+  expire 2 2025/04/22 19:08:07;
+}
+
+
+----------
+task2
+
+ubuntu@ubuntu:~/hws/HW2$ ip -6 addr show dev tap0
+9: tap0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UNKNOWN group default qlen 1000
+    inet6 fdca:1399:2104:3405:57c7:3640:1879:23bd/64 scope global temporary dynamic 
+       valid_lft 3540sec preferred_lft 3540sec
+    inet6 fdca:1399:2104:3405:10f0:42ff:fe39:3a14/64 scope global dynamic mngtmpaddr <-------- берем это и склеиваем начало с ::5f:c6ff:fe3b:c5c2
+
+       valid_lft 3540sec preferred_lft 3540sec
+    inet6 fe80::10f0:42ff:fe39:3a14/64 scope link 
+       valid_lft forever preferred_lft forever
+ubuntu@ubuntu:~/hws/HW2$ ping6 fdca:1399:2104::5f:c6ff:fe3b:c5c2
+PING fdca:1399:2104::5f:c6ff:fe3b:c5c2 (fdca:1399:2104:0:5f:c6ff:fe3b:c5c2) 56 data bytes
+From fdca:1399:2104:3405:9c:b3ff:fe0d:a04d icmp_seq=1 Destination unreachable: No route
+From fdca:1399:2104:3405:9c:b3ff:fe0d:a04d icmp_seq=2 Destination unreachable: No route
+
+ubuntu@ubuntu:~/hws/HW2$ ping6 fdca:1399:2104:3405:5f:c6ff:fe3b:c5c2
+
+SLAAC не проверяет уникальность адреса, поэтому нужен пинг, DHCP сразу выдаёт рабочий адрес
+
+
+ubuntu@ubuntu:~/hws/HW2$ sudo dhclient -6 tap0
+
+
+ubuntu@ubuntu:~/hws/HW2$ nslookup wf6xnrr4yd4w0xy7dbw6wyv9.localnetwork
+Server:  127.0.0.53
+Address: 127.0.0.53#53
+
+Non-authoritative answer:
+Name: wf6xnrr4yd4w0xy7dbw6wyv9.localnetwork
+Address: fdca:1399:2104:3405:b5:bdff:fe04:5886  <-----
+
+Ну а с кнопкой все было очень просто так как линукс у меня с интерфейсом и я просто воспользовался браузером...
