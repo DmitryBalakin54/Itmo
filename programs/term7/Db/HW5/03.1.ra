@@ -1,0 +1,1 @@
+pi{StudentId, StudentName, GroupId}(s{Mark = :Mark && CourseId = :CourseId}(Students njoin Marks))

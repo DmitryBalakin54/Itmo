@@ -1,0 +1,1 @@
+pi{StudentId, StudentName, GroupId}(s{CourseName = :CourseName}(Students njoin Courses njoin Plan)) diff pi{StudentId, StudentName, GroupId}(s{CourseName = :CourseName}(Students njoin Marks njoin Courses))

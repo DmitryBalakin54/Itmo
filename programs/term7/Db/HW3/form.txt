@@ -1,0 +1,178 @@
+1
+----------
+StudentId -> StudentName, GroupId
+GroupId -> GroupName
+CourseId -> CourseName
+LecturerId -> LecturerName
+ClubId -> ClubName, ClubPresidentId
+ClubPresidentId -> StudentId
+GroupName -> GroupId
+ClubName -> ClubId
+StudentId, CourseId -> Mark
+GroupId, CourseId -> LecturerId
+----------
+
+2.1
+----------
+{StudentId, StudentName, GroupId, GroupName, CourseId, CourseName, LecturerId, LecturerName, Mark, ClubId, ClubName, ClubPresidentId} (тривиальный)
+
+{StudentId, StudentName, GroupId, CourseId, LecturerId, LecturerName, ClubId, ClubName, ClubPresidentId} (т.к. StudentId, CourseId -> Mark, CourseId -> CourseName, GroupId -> GroupName
+убираем Mark, CourseName, GroupName)
+
+{StudentId, CourseId, LecturerId, LecturerName, ClubId, ClubName, ClubPresidentId} (т.к. StudentId -> StudentName, GroupId убираем StudentName, GroupId)
+
+{StudentId, CourseId, LecturerId, LecturerName, ClubId} (т.к. ClubId -> ClubName, ClubPresidentId убираем ClubName, ClubPresidentId)
+
+{StudentId, CourseId, LecturerId, ClubId} (т.к. LecturerId -> LecturerName убираем LecturerName)
+
+{StudentId, CourseId, ClubId} (т.к. GroupId, CourseId -> LecturerId
+ убираем LecturerId)
+
+{CourseId, ClubId} (т.к. ClubPresidentId -> StudentId)
+
+{CourseId, ClubId} (это ключ, поскольку CourseId только в левой половинке ФЗ, он будет всегда в ключе, а ClubId есть и в правой половинке, значит его можно заменить для получения нового ключа)
+
+{CourseId, ClubName} (второй ключ, больше нету)
+----------
+
+2.2
+----------
+CourseId, ClubId
+CourseId, ClubName
+----------
+
+3.1
+----------
+GroupId, CourseId
+GroupId, CourseId, CourseName
+GroupId, CourseId, CourseName, GroupName
+GroupId, CourseId, CourseName, GroupName, LecturerId
+GroupId, CourseId, CourseName, GroupName, LecturerId, LecturerName
+----------
+
+3.2
+----------
+StudentId, CourseId
+StudentId, CourseId, StudentName
+StudentId, CourseId, StudentName, GroupId
+StudentId, CourseId, StudentName, GroupId, CourseName
+StudentId, CourseId, StudentName, GroupId, CourseName, Mark
+StudentId, CourseId, StudentName, GroupId, CourseName, Mark, LecturerId
+StudentId, CourseId, StudentName, GroupId, CourseName, Mark, LecturerId, GroupName
+StudentId, CourseId, StudentName, GroupId, CourseName, Mark, LecturerId, GroupName, LecturerName
+----------
+
+3.3
+----------
+StudentId, LecturerId
+StudentId, LecturerId, StudentName
+StudentId, LecturerId, StudentName, GroupId
+StudentId, LecturerId, StudentName, GroupId, LecturerName
+StudentId, LecturerId, StudentName, GroupId, LecturerName, GroupName
+----------
+
+3.4
+----------
+StudentId, ClubId
+StudentId, ClubId, StudentName
+StudentId, ClubId, StudentName, GroupId
+StudentId, ClubId, StudentName, GroupId, ClubName
+StudentId, ClubId, StudentName, GroupId, ClubName, ClubPresidentId
+StudentId, ClubId, StudentName, GroupId, ClubName, ClubPresidentId, GroupName
+----------
+
+3.5
+----------
+StudentId, ClubPresidentId
+StudentId, ClubPresidentId, StudentName
+StudentId, ClubPresidentId, StudentName, GroupId
+StudentId, ClubPresidentId, StudentName, GroupId, GroupName
+----------
+
+3.6
+----------
+GroupName, LecturerId
+GroupName, LecturerId, GroupId
+GroupName, LecturerId, GroupId, LecturerName
+----------
+
+4.1d
+----------
+Расщипление 
+
+StudentId -> StudentName, GroupId
+ClubId -> ClubName, ClubPresidentId
+
+получаем 
+
+StudentId -> StudentName
+StudentId -> GroupId
+ClubId -> ClubName
+ClubId -> ClubPresidentId
+----------
+
+4.1r
+----------
+StudentId -> StudentName
+StudentId -> GroupId
+GroupId -> GroupName
+CourseId -> CourseName
+LecturerId -> LecturerName
+ClubId -> ClubName
+ClubId -> ClubPresidentId
+ClubPresidentId -> StudentId
+GroupName -> GroupId 
+ClubName -> ClubId
+StudentId, CourseId -> Mark
+GroupId, CourseId -> LecturerId
+----------
+
+4.2d
+----------
+StudentId, CourseId -> Mark (ничего не делаем т.к. ни в одном замыкании по одному атрибуту из левой части не содержится Mark) 
+GroupId, CourseId -> LecturerId (аналогично, нет способа только по одному атрибуту и другим ФЗ узнать LecturerId) 
+----------
+
+4.2r
+----------
+StudentId -> StudentName
+StudentId -> GroupId
+GroupId -> GroupName
+CourseId -> CourseName
+LecturerId -> LecturerName
+ClubId -> ClubName
+ClubId -> ClubPresidentId
+ClubPresidentId -> StudentId
+GroupName -> GroupId
+ClubName -> ClubId
+StudentId, CourseId -> Mark
+GroupId, CourseId -> LecturerId
+----------
+
+4.3d
+----------
+проверим для каждого правила что его можно удалить, удалив правило A -> B, а затем проверив принадлежит ли B замыканию A.
+
+StudentId -> StudentName нельзя удалить т.к. замыкание {StudentId, GroupId, GroupName}, так же заметим что если A находится в правой части только один раз, то мы точно не можем удалить правило B -> A, ведь замыкание B точно не будет содержать A, исходя из этого нам нужно проверить лишь строки StudentId -> GroupId и GroupName -> GroupId поскольку GroupId единственный содержится в правой части более одного раза.
+
+StudentId -> GroupId нельзя удалить т.к. замыкание {StudentId, StudentName}
+GroupName -> GroupId нельзя удалить т.к. замыкание {GroupName}
+
+в итоге ничего не меняем
+----------
+
+4.3r
+----------
+StudentId -> StudentName
+StudentId -> GroupId
+GroupId -> GroupName
+CourseId -> CourseName
+LecturerId -> LecturerName
+ClubId -> ClubName
+ClubId -> ClubPresidentId
+ClubPresidentId -> StudentId
+GroupName -> GroupId 
+ClubName -> ClubId
+StudentId, CourseId -> Mark
+GroupId, CourseId -> LecturerId
+----------

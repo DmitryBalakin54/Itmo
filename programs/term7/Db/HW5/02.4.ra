@@ -1,0 +1,1 @@
+pi{StudentId, StudentName, GroupName}(s{ClubName = :ClubName}(Students njoin Groups njoin Clubs njoin ClubMembers))

@@ -1,0 +1,284 @@
+1.1
+----------
+{StudentId, StudentName, GroupId, GroupName, CourseId, CourseName, LecturerId, LecturerName, ClubId, ClubName, ClubStudentHeadId, Mark} 
+
+В данном отношении нету повторяющихся групп и все атрибуты атомарны, так же у данного отношения есть ключ {CourseId, ClubId, StudentId} (из прошлого дз, меняется лишь название одного из атрибутов, но по сути одно и то же). Поэту отношение находится в 1НФ.
+----------
+
+1.2
+----------
+(StudentId, StudentName, GroupId, GroupName, CourseId, CourseName, LecturerId, LecturerName, ClubId, ClubName, ClubStudentHeadId, Mark) => (StudentId, StudentName, GroupId, GroupName, CourseId, CourseName, LecturerId, LecturerName, ClubId, ClubName, ClubStudentHeadId, Mark).
+----------
+
+2.1
+----------
+отношение
+{StudentId, StudentName, GroupId, GroupName, CourseId, CourseName, LecturerId, LecturerName, ClubId, ClubName, ClubStudentHeadId, Mark}
+
+ключ
+{CourseId, ClubId, StudentId}
+
+фз
+StudentId -> StudentName, GroupId, GroupName
+GroupId -> GroupName
+GroupName -> GroupId
+CourseId -> CourseName
+LecturerId -> LecturerName
+StudentId, CourseId -> Mark
+GroupId, CourseId -> LecturerId
+ClubId -> ClubName
+ClubName -> ClubId, ClubStudentHeadId
+
+сразу видно что неключевые атрибуты зависят не от ключа в целом, и таких нарушений много
+
+для начала изменим наши фз, по транзитивности из ClubId -> ClubName и ClubName -> ClubId, ClubStudentHeadId получим ClubId -> ClubId, ClubStudentHeadId, затем получим фз ClubId -> ClubStudentHeadId и затем фз ClubId -> ClubName, ClubStudentHeadId. Декомпозируем по этой фз т.к. атрибуты зависят не от ключа в целом, получим:
+
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{StudentId, StudentName, GroupId, GroupName, CourseId, CourseName, LecturerId, LecturerName, Mark} c ключом {StudentId, CourseId}
+
+теперь декомпозируем по CourseId -> CourseName:
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{CourseId, CourseName} c ключом {CourseId}
+{StudentId, StudentName, GroupId, GroupName, CourseId, LecturerId, LecturerName, Mark} c ключом {StudentId, CourseId}
+
+получим новое фз GroupId, CourseId -> LecturerId, LecturerName из GroupId, CourseId -> LecturerId и LecturerId -> LecturerName.
+
+теперь декомпозируем по GroupId, CourseId -> LecturerId, LecturerName:
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{CourseId, CourseName} c ключом {CourseId}
+{GroupId, CourseId, LecturerId, LecturerName} c ключом {GroupId, CourseId}
+{StudentId, StudentName, GroupId, GroupName, CourseId, Mark} c ключом {StudentId, CourseId}
+
+далее декомпозируем по StudentId -> StudentName, GroupId, GroupName:
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{CourseId, CourseName} c ключом {CourseId}
+{GroupId, CourseId, LecturerId, LecturerName} c ключом {GroupId, CourseId}
+{StudentId, StudentName, GroupId, GroupName} c ключом {StudentId}
+{StudentId, CourseId, Mark} c ключом {StudentId, CourseId}
+
+получается что все условия соблюдены и мы получаем 2НФ.
+
+----------
+
+2.2
+----------
+(StudentId, StudentName, GroupId, GroupName, CourseId, CourseName, LecturerId, LecturerName, ClubId, ClubName, ClubStudentHeadId, Mark) => (ClubId, ClubName, ClubStudentHeadId); (CourseId, CourseName); (GroupId, CourseId, LecturerId, LecturerName); (StudentId, StudentName, GroupId, GroupName); (StudentId, CourseId, Mark).
+----------
+
+3.1
+----------
+отношения
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{CourseId, CourseName} c ключом {CourseId}
+{GroupId, CourseId, LecturerId, LecturerName} c ключом {GroupId, CourseId}
+{StudentId, StudentName, GroupId, GroupName} c ключом {StudentId}
+{StudentId, CourseId, Mark} c ключом {StudentId, CourseId}
+
+фз
+
+StudentId -> StudentName, GroupId, GroupName
+GroupId -> GroupName
+GroupName -> GroupId
+CourseId -> CourseName
+LecturerId -> LecturerName
+StudentId, CourseId -> Mark
+GroupId, CourseId -> LecturerId
+ClubId -> ClubName
+ClubName -> ClubId, ClubStudentHeadId
+
+рассмотрим каждое отношение на наличие транзитивных зависимостей не от ключей.
+
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName} все ок т.к. есть 2 ключа от которых все напрямую зависит.
+
+
+{CourseId, CourseName} c ключом {CourseId} все в порядке.
+
+{GroupId, CourseId, LecturerId, LecturerName} c ключом {GroupId, CourseId} видим что по ФЗ LecturerId -> LecturerName нарушение, декомпозируем по этому правилу, получаем:
+{GroupId, CourseId, LecturerId} c ключом {GroupId, CourseId} (корректно)
+{LecturerId, LecturerName} с ключем {LecturerId} (корректно)
+теперь нарушений нет.
+
+{StudentId, StudentName, GroupId, GroupName} c ключом {StudentId} тут фз GroupId -> GroupName все ломает, исправим это:
+{StudentId, StudentName, GroupId} c ключом {StudentId} (корректно)
+{GroupId, GroupName} c ключом {GroupId} или {GroupName}(корректно)
+
+{StudentId, CourseId, Mark} c ключом {StudentId, CourseId} все в порядке.
+
+получаем в итоге 3НФ:
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{CourseId, CourseName} c ключом {CourseId}
+{GroupId, CourseId, LecturerId} c ключом {GroupId, CourseId}
+{LecturerId, LecturerName} с ключем {LecturerId}
+{StudentId, StudentName, GroupId} c ключом {StudentId}
+{GroupId, GroupName} c ключом {GroupId} или {GroupName}
+{StudentId, CourseId, Mark} c ключом {StudentId, CourseId}
+----------
+
+3.2
+----------
+(ClubId, ClubName, ClubStudentHeadId) => (ClubId, ClubName, ClubStudentHeadId).
+(CourseId, CourseName) => (CourseId, CourseName).
+(GroupId, CourseId, LecturerId, LecturerName) => (GroupId, CourseId, LecturerId); (LecturerId, LecturerName).
+(StudentId, StudentName, GroupId, GroupName) => (StudentId, StudentName, GroupId); (GroupId, GroupName). 
+(StudentId, CourseId, Mark) => (StudentId, CourseId, Mark).
+----------
+
+Б.1
+----------
+отношения
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{CourseId, CourseName} c ключом {CourseId}
+{GroupId, CourseId, LecturerId} c ключом {GroupId, CourseId}
+{LecturerId, LecturerName} с ключем {LecturerId}
+{StudentId, StudentName, GroupId} c ключом {StudentId}
+{GroupId, GroupName} c ключом {GroupId} или {GroupName}
+{StudentId, CourseId, Mark} c ключом {StudentId, CourseId}
+
+фз
+
+StudentId -> StudentName, GroupId, GroupName
+GroupId -> GroupName
+GroupName -> GroupId
+CourseId -> CourseName
+LecturerId -> LecturerName
+StudentId, CourseId -> Mark
+GroupId, CourseId -> LecturerId
+ClubId -> ClubName
+ClubName -> ClubId, ClubStudentHeadId
+
+рассмотрим все отношения, будем проверять что для каждой нетривиальной фз X -> Y, X является надключом:
+
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName} условия выполнены:
+ClubId -> ClubName
+ClubName -> ClubStudentHeadId
+ClubName -> ClubId
+как видим все левые половинки это надключи.
+
+{CourseId, CourseName} c ключом {CourseId} очевидно выполнены.
+
+{GroupId, CourseId, LecturerId} c ключом {GroupId, CourseId} так же имеем 1 фз, как в прошлом примере, условия выполнены.
+
+{LecturerId, LecturerName} с ключем {LecturerId} тоже все в порядке.
+
+
+{StudentId, StudentName, GroupId} c ключом {StudentId} все корректно.
+
+{GroupId, GroupName} c ключом {GroupId} или {GroupName} аналогично все корректно.
+
+{StudentId, CourseId, Mark} c ключом {StudentId, CourseId} тоже все ок.
+
+получается что все отношения это НФБК:
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{CourseId, CourseName} c ключом {CourseId}
+{GroupId, CourseId, LecturerId} c ключом {GroupId, CourseId}
+{LecturerId, LecturerName} с ключем {LecturerId}
+{StudentId, StudentName, GroupId} c ключом {StudentId}
+{GroupId, GroupName} c ключом {GroupId} или {GroupName}
+{StudentId, CourseId, Mark} c ключом {StudentId, CourseId}
+
+----------
+
+Б.2
+----------
+(ClubId, ClubName, ClubStudentHeadId) => (ClubId, ClubName, ClubStudentHeadId).
+(CourseId, CourseName) => (CourseId, CourseName).
+(GroupId, CourseId, LecturerId) => (GroupId, CourseId, LecturerId).
+(LecturerId, LecturerName) => (LecturerId, LecturerName).
+(StudentId, StudentName, GroupId) => (StudentId, StudentName, GroupId).
+(GroupId, GroupName) => (GroupId, GroupName). 
+(StudentId, CourseId, Mark) => (StudentId, CourseId, Mark).
+----------
+
+4.1
+----------
+имеем отношения
+
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{CourseId, CourseName} c ключом {CourseId}
+{GroupId, CourseId, LecturerId} c ключом {GroupId, CourseId}
+{LecturerId, LecturerName} с ключем {LecturerId}
+{StudentId, StudentName, GroupId} c ключом {StudentId}
+{GroupId, GroupName} c ключом {GroupId} или {GroupName}
+{StudentId, CourseId, Mark} c ключом {StudentId, CourseId}
+
+все данные отношения находятся в НФБК, и у всех, кроме {GroupId, CourseId, LecturerId} и {StudentId, CourseId, Mark} c ключом {GroupId, CourseId} простой ключ, значит они по теореме Дейта-Фейгина 2 находятся в 4НФ
+
+рассмотрим {GroupId, CourseId, LecturerId} c ключом {GroupId, CourseId}, проверим все МЗ
+
+1. GroupId ->> CourseId | LecturerId, контрпример {id(Группа 1), id(Матан), id(Лектор 1)} и {id(Группа 1), id(Линал), id(Лектор 2)}, то есть каждой группе какому-то курсу соответствует только один преподаватель, значит это не МЗ.
+
+2. CourseId ->> GroupId | LecturerId, контрпример {id(Группа 1), id(Матан), id(Лектор 1)} и {id(Группа 2), id(Матан), id(Лектор 2)}, для каждого курса какой-то курс может вести только один преподаватель, значит это не МЗ.
+
+3. LecturerId ->> GroupId | CourseId, контрпример {id(Группа 1), id(Матан), id(Лектор 1)} и {id(Группа 2), id(Линал), id(Лектор 1)}, для каждого преподавателя какой-то курс может быть только у одной группы, значит это не МЗ.
+
+МЗ нету, значит это 4НФ
+
+аналогично и для {StudentId, CourseId, Mark} c ключом {StudentId, CourseId} проверимм все МЗ
+
+1. StudentId ->> CourseId | Mark, контрпример, все аналогично предыдущим рассуждениям, зафиксируем одного студента и курс1, курс2, по этим курсам у него оценки 3 и 4 соответственно, то есть это не МЗ.
+
+2. CourseId ->> StudentId | Mark аналогично и в данном случае, при фиксации курса, для двух разных студентов получаем разные множества оценок, значит это не МЗ.
+
+3. Mark ->> CourseId | StudentId аналогично в этой ситуации не МЗ.
+
+значит это 4НФ.
+
+все отношения 4НФ.
+
+----------
+
+4.2
+----------
+(ClubId, ClubName, ClubStudentHeadId) => (ClubId, ClubName, ClubStudentHeadId).
+(CourseId, CourseName) => (CourseId, CourseName).
+(GroupId, CourseId, LecturerId) => (GroupId, CourseId, LecturerId).
+(LecturerId, LecturerName) => (LecturerId, LecturerName).
+(StudentId, StudentName, GroupId) => (StudentId, StudentName, GroupId).
+(GroupId, GroupName) => (GroupId, GroupName). 
+(StudentId, CourseId, Mark) => (StudentId, CourseId, Mark).
+----------
+
+5.1
+----------
+имеем отношения
+
+{ClubId, ClubName, ClubStudentHeadId} c ключом {ClubId} или {ClubName}
+{CourseId, CourseName} c ключом {CourseId}
+{GroupId, CourseId, LecturerId} c ключом {GroupId, CourseId}
+{LecturerId, LecturerName} с ключем {LecturerId}
+{StudentId, StudentName, GroupId} c ключом {StudentId}
+{GroupId, GroupName} c ключом {GroupId} или {GroupName}
+{StudentId, CourseId, Mark} c ключом {StudentId, CourseId}
+
+используя теорему Дейта-Фейгина 1 все кроме двух отношений находятся в 5НФ в силу простых ключей, рассмотрим два оставшийся отношения.
+
+рассмотрим {GroupId, CourseId, LecturerId}
+
+1. *{[GroupId], [CourseId], [LecturerId]} в данном случае исходная таблица, заполненная данными [(id(Группа 1), id(Матан), id(Лектор 1)), (id(Группа 2), id(Линал), id(Лектор 2))] разобьется на 3 других таблицы, где будут лежать какие-то строки, пусть в таблице GroupIdTable лежат данные [id(Группа 1), id(Группа 2)], а в таблице LectorIdTable лежат [id(Лектор 1), id(Лектор 2)], тогда при соединении мы получим строку (id(Группа 1), id(Лектор 2)), уже на этом этапе мы породили несуществующую в исходном отношении строку, значит это не ЗС.
+
+2. *{[GroupId, CourseId], [CourseId, LecturerId], [LecturerId, GroupId]} все аналогично предыдущему случаю, пусть в исходной таблице лежат данные {(id(Группа 1), id(Матан), id(Лектор 1)), (id(Группа 2), id(Линал), id(Лектор 1))}, тогда при соединении [CourseId, LecturerId], [LecturerId, GroupId] получим новую строку (id(Группа 1), id(Линал), id(Лектор 1)), этой строки не было в исходной таблице, значит это не ЗС.
+
+остальные ЗС нет смысла рассматривать т.к. 4НФ уже подразумевает рассмотрение на 2 множества, значит это 5НФ.
+
+рассмотрим  {StudentId, CourseId, Mark} аналогично предыдущему пункту.
+
+1. *{[StudentId], [CourseId], [Mark]} исходная таблица [(1, 2, 5), (3, 4, 4)] соединяем StudentIdTable и CourseIdTable и получаем строку (1, 4) которая в итоге породит 2 строки которых нет в исходной таблице, значит это не ЗС.
+
+2. *{[StudentId, CourseId], [CourseId, Mark], [Mark, StudentId]} исходная таблица [(1, 4, 5), (3, 4, 4)] соединяем [StudentId, CourseId], [CourseId, Mark] и получаем (1, 4, 4) чего нет в исходной таблице значит это не ЗС.
+
+значит это 5НФ.
+
+все отношения 5НФ.
+
+----------
+
+5.2
+----------
+(ClubId, ClubName, ClubStudentHeadId) => (ClubId, ClubName, ClubStudentHeadId).
+(CourseId, CourseName) => (CourseId, CourseName).
+(GroupId, CourseId, LecturerId) => (GroupId, CourseId, LecturerId).
+(LecturerId, LecturerName) => (LecturerId, LecturerName).
+(StudentId, StudentName, GroupId) => (StudentId, StudentName, GroupId).
+(GroupId, GroupName) => (GroupId, GroupName). 
+(StudentId, CourseId, Mark) => (StudentId, CourseId, Mark).
+----------

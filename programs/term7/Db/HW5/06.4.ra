@@ -1,0 +1,1 @@
+pi{StudentId}((pi{StudentId, CourseId}(Marks) gdiv pi{CourseId, GroupId}(s{LecturerName = :LecturerName}(Lecturers njoin Plan))) njoin Students)

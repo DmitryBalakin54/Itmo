@@ -1,0 +1,1 @@
+pi{ProblemName, ContestId}(pi{ProblemName, ContestId}(Problems) diff pi{ProblemName, ContestId}(s{Accepted = 1}(Problems njoin Runs)))

@@ -1,0 +1,1 @@
+pi{RunId, SessionId, Letter, SubmitTime}(s{Accepted = 0 && ContestName = :ContestName}(Runs njoin Sessions njoin Contests))

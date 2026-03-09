@@ -1,0 +1,234 @@
+1.G
+----------
+-- Индекс на PK для Groups, HASH т.к. по id у нас все
+-- запросы вида ... WHRE id =: id и нам не нужно группировать
+-- по id или искать в диапазоне ... WERE id > N. 
+-- ДЗ-5.2.1. Полную информацию о студентах с заданным идентификатором (StudentId, StudentName, GroupName по :StudentId).
+-- ДЗ-5.2.2. Полную информацию о студентах с заданным ФИО (StudentId, StudentName, GroupName по :StudentName).
+-- ДЗ-5.2.5. Полную информацию о студентах клуба по руководителю (StudentId, StudentName, GroupName по :StudentName).
+CREATE UNIQUE INDEX ind_Groups ON Groups USING HASH (GroupId);
+
+-- Индекс для поиска по GroupName, BTREE т.к. нам нужно
+-- группировать студентов по группам, а так же покрывающий
+-- индекс позволяет не обращаться к таблице, а брать
+-- GroupId из индекса.
+-- ДЗ-5.2.3. Полную информацию о студентах из заданной группы (StudentId, StudentName, GroupName по :GroupName).
+-- ДЗ-7.1.2. Напишите запросы, удаляющие студентов: Учащихся в группе, заданной названием (GroupName).
+-- ДЗ-7.3.5. Напишите запросы, обновляющие данные студентов: Перевод всех студентов из группы в группу по названиям (GroupName, FromGroupName).
+CREATE INDEX ind_Groups_GroupName ON Groups USING BTREE (GroupName, GroupId);
+----------
+
+1.S
+---------
+-- Индекс на PK для Students, HASH т.к. по id у нас все
+-- запросы вида ... WHRE id =: id и нам не нужно группировать
+-- по id или искать в диапазоне ... WERE id > N.
+-- ДЗ-5.1.1. Информацию о студентах с заданным идентификатором (StudentId, StudentName, GroupId по :StudentId).
+-- ДЗ-5.2.1. Полную информацию о студентах с заданным идентификатором (StudentId, StudentName, GroupName по :StudentId).
+-- ДЗ-7.3.1. Напишите запросы, обновляющие данные студентов: Изменение имени студента (StudentId, StudentName).
+CREATE UNIQUE INDEX ind_Students ON Students USING HASH (StudentId);
+
+-- Индекс для поиска по StudentName, BTREE т.к. можем искать
+-- студентов по подстроке из их имени (найти всех Иванов), a
+-- так же студенты будут всегда отсортированы, что ускорит запросы,
+-- покрывающий индекс позволяет не обращаться к таблице,
+-- а брать StudentId из индекса.
+-- ДЗ-5.1.2. Информацию о студентах с заданным ФИО (StudentId, StudentName, GroupId по :StudentName).
+-- ДЗ-5.2.2. Полную информацию о студентах с заданным ФИО (StudentId, StudentName, GroupName по :StudentName).
+-- ДЗ-6.1.1. Информацию о студентах с заданным ФИО (StudentId, StudentName, GroupId по :StudentName).
+CREATE INDEX ind_Students_StudentName ON Students USING BTREE (StudentName, StudentId);
+
+-- Индекс на FK таблицы Groups, HASH т.к. нам нужно искать
+-- студентов конкретной группы, а так же нам не нужна сортировка.
+-- ДЗ-5.2.3. Полную информацию о студентах из заданной группы (StudentId, StudentName, GroupName по :GroupName).
+-- ДЗ-6.1.2. Информацию о студентах учащихся в заданной группе (StudentId, StudentName, GroupId по :GroupName).
+-- ДЗ-7.3.5. Напишите запросы, обновляющие данные студентов: Перевод всех студентов из группы в группу по названиям (GroupName, FromGroupName).
+CREATE INDEX ind_Students_GroupId ON Students USING HASH (GroupId);
+---------
+
+
+1.C
+---------
+-- Индекс на PK для Courses, HASH т.к. по id у нас все
+-- запросы вида ... WHRE id =: id и нам не нужно группировать
+-- по id или искать в диапазоне ... WERE id > N.
+-- ДЗ-6.1.4. Информацию о студентах с заданной оценкой по дисциплине, заданной идентификатором (StudentId, StudentName, GroupId по :Mark, :CourseId).
+-- ДЗ-6.2.4. Полную информацию о студентах, не имеющих оценки по дисциплине, заданной идентификатором (StudentId, StudentName, GroupName по :CourseId).
+-- ДЗ-6.2.6. Полную информацию о студентах, не имеющих оценки по дисциплине, у которых есть эта дисциплина (StudentId, StudentName, GroupName по :CourseId).
+CREATE UNIQUE INDEX ind_Courses ON Courses USING HASH (CourseId);
+
+-- Индекс для поиска по имени кура, BTREE нужен для покрывающего индекса,
+-- который позволяет не обращяться лишний раз к таблице.
+-- ДЗ-5.3.2. Информацию о студентах с заданной оценкой по дисциплине с заданным названием (StudentId, StudentName, GroupId по :Mark, :CourseName).
+-- ДЗ-5.4.1. Информацию о студентах не имеющих оценки по дисциплине среди всех студентов (StudentId, StudentName, GroupId по :CourseName).
+-- ДЗ-5.4.3. Информацию о студентах не имеющих оценки по дисциплине среди участников клуба (StudentId, StudentName, GroupId по :CourseName, :ClubName).
+CREATE INDEX ind_Courses_CourseName ON Courses USING BTREE (CourseName, CourseId);
+---------
+
+1.L
+---------
+-- Индекс на PK для Lecturers, HASH т.к. по id у нас все
+-- запросы вида ... WHRE id =: id и нам не нужно группировать
+-- по id или искать в диапазоне ... WERE id > N.
+-- ДЗ-5.3.4. Информацию о студентах с заданной оценкой по дисциплине, которую у них вёл лектор, заданный ФИО (StudentId, StudentName, GroupId по :Mark, :LecturerName).
+-- ДЗ-5.3.6. Информацию о студентах с заданной оценкой по дисциплине, которую вёл лектор, заданный ФИО (StudentId, StudentName, GroupId по :Mark, :LecturerName).
+-- ДЗ-5.6.2. Идентификаторы студентов по преподавателю: Не имеющих ни одной оценки у преподавателя (StudentId по :LecturerName).
+CREATE UNIQUE INDEX ind_Lecturers ON Lecturers USING HASH (LecturerId);
+
+-- Индекс для поиска преподавателя по его имени, BTREE нужен для покрывающего индекса,
+-- который позволяет не обращяться лишний раз к таблице.
+-- ДЗ-5.3.4. Информацию о студентах с заданной оценкой по дисциплине, которую у них вёл лектор, заданный ФИО (StudentId, StudentName, GroupId по :Mark, :LecturerName).
+-- ДЗ-5.3.6. Информацию о студентах с заданной оценкой по дисциплине, которую вёл лектор, заданный ФИО (StudentId, StudentName, GroupId по :Mark, :LecturerName).
+-- ДЗ-5.6.2. Идентификаторы студентов по преподавателю: Не имеющих ни одной оценки у преподавателя (StudentId по :LecturerName).
+CREATE INDEX ind_Lecturers_LecturerName ON Lecturers USING BTREE (LecturerName, LecturerId);
+---------
+
+1.P
+---------
+-- Индекс для поиска данных по
+-- 1. Группе
+-- 2. Группе и курсу
+-- 3. Группе, курсу и преподователе
+-- ДЗ-6.5.1. Идентификаторы студентов по преподавателю, имеющих хотя бы одну оценку у преподавателя (StudentId по :LecturerName).
+-- ДЗ-6.4.3. Студенты и дисциплины, такие что дисциплина есть в его плане, и у студента долг по этой дисциплине: Долгом считается отсутствие оценки или оценка не выше 2 (StudentName, CourseName).
+-- ДЗ-6.3.2. Студенты и дисциплины, такие что у студента была дисциплина: Имя и название (StudentName, CourseName).
+CREATE INDEX ind_Plan_GroupId ON Plan USING BTREE (GroupId, CourseId, LecturerId);
+
+-- Индекс для поиска по преподавателю и курсу, либо только по преподавателю
+-- ДЗ-6.5.3. Идентификаторы студентов по преподавателю, имеющих оценки по всем дисциплинам преподавателя (StudentId по :LecturerName).
+-- ДЗ-6.5.4. Идентификаторы студентов по преподавателю, имеющих оценки по всем дисциплинам преподавателя, которые он вёл у этого студента (StudentId по :LecturerName).
+CREATE INDEX ind_Plan_CourseId ON Plan USING BTREE (LecturerId, CourseId);
+---------
+
+1.M
+---------
+-- Индекс для поиска данных по
+-- 1. Студенту
+-- 2. Студенту и курсу
+-- 3. Студенту, курсу и оценке(как =, так и > или < и тд)
+-- ДЗ-5.3.1. Информацию о студентах с заданной оценкой по дисциплине c заданным идентификатором (StudentId, StudentName, GroupId по :Mark, :CourseId).
+-- ДЗ-5.3.2. Информацию о студентах с аданным названием (StudentId, StudentName, GroupId по :Mark, :CourseName).
+-- ДЗ-5.3.3. Информацию о студентах которую у него вёл лектор заданный идентификатором (StudentId, StudentName, GroupId по :Mark, :LecturerId).
+CREATE INDEX ind_Marks_StudentId ON Marks USING BTREE (StudentId, CourseId, Mark);
+
+-- Индекс для поиска данных по
+-- 1. Курсу
+-- 2. Курсу и студенту
+-- 3. Курсу, студенту и оценке(как =, так и > или < и тд)
+-- ДЗ-5.5.3. Для каждого студента ФИО и названия дисциплин: Есть, но у него не 4 или 5 (StudentName, CourseName).
+-- ДЗ-6.4.1. Студенты и дисциплины, такие что дисциплина есть в его плане, и у студента долг по этой дисциплине: Долгом считается отсутствие оценки (StudentName, CourseName).
+-- ДЗ-6.4.2. Студенты и дисциплины, такие что дисциплина есть в его плане, и у студента долг по этой дисциплине: Долгом считается оценка не выше 2 (StudentName, CourseName).
+CREATE INDEX ind_Marks_CourseId ON Marks USING BTREE (CourseId, StudentId, Mark);
+---------
+
+1.C
+---------
+-- Индекс на PK для Clubs, HASH т.к. по id у нас все
+-- запросы вида ... WHRE id =: id и нам не нужно группировать
+-- по id или искать в диапазоне ... WERE id > N.
+-- ДЗ-6.1.3. Информацию о студентах участниках клуба (StudentId, StudentName, GroupId по :ClubName).
+-- ДЗ-6.2.2. Полную информацию о студентах участниках клуба (StudentId, StudentName, GroupName по :ClubName).
+-- ДЗ-6.3.3. Студенты и дисциплины, такие что у студента была дисциплина: Имя и название по клубу (StudentName, CourseName по :ClubName).
+CREATE UNIQUE INDEX ind_Clubs ON Clubs USING HASH (ClubId);
+
+-- Индекс для поиска по ClubName, BTREE нужен для покрывающего индекса,
+-- который снижает количество обращений к таблице.
+-- ДЗ-5.2.4. Полную информацию о студентах заданного клуба (StudentId, StudentName, GroupName по :ClubName).
+-- ДЗ-5.4.3. Информацию о студентах не имеющих оценки по дисциплине среди участников клуба (StudentId, StudentName, GroupId по :CourseName, :ClubName).
+-- ДЗ-5.5.5. Для каждого студента ФИО и названия дисциплин: Участников клуба (StudentName, CourseName по :ClubName).
+CREATE INDEX ind_Clubs_ClubName ON Clubs USING BTREE (ClubName, ClubId);
+
+-- Индекс для поиска по ClubStudentHeadId, BTREE нужен для покрывающего индекса,
+-- который снижает количество обращений к таблице.
+-- ДЗ-5.2.5. Полную информацию о студентах клуба по руководителю (StudentId, StudentName, GroupName по :StudentName).
+-- ДЗ-6.2.3. Полную информацию о студентах участниках клуба по руководителю (StudentId, StudentName, GroupName по :StudentName).
+CREATE INDEX ind_Clubs_ClubStudentHeadId ON Clubs USING BTREE (ClubStudentHeadId, ClubId);
+---------
+
+1.CM
+---------
+-- Индекс для поиска студентов по клубу, так же очень важна в данном
+-- случае возможность более быстрой группировки, если нужно работать со
+-- всеми студентами клубов и собирать статистику.
+-- ДЗ-5.2.4. Полную информацию о студентах заданного клуба (StudentId, StudentName, GroupName по :ClubName).
+-- ДЗ-5.2.5. Полную информацию о студентах клуба по руководителю (StudentId, StudentName, GroupName по :StudentName).
+-- ДЗ-5.4.3. Информацию о студентах не имеющих оценки по дисциплине среди участников клуба (StudentId, StudentName, GroupId по :CourseName, :ClubName).
+CREATE INDEX ind_ClubMembers_ClubId ON ClubMembers USING BTREE (ClubId);
+---------
+
+2.Q
+---------
+SELECT AVG(M.Mark) AS AvgMark
+FROM Clubs AS CB
+NATURAL JOIN ClubMembers AS CM 
+NATURAL JOIN Marks AS M
+NATURAL JOIN Courses AS C
+WHERE CB.ClubName = :ClubName
+AND C.CourseName = :CourseName;
+---------
+
+2.I
+---------
+-- Индекс для быстрого нахождения id клуба по его названию, не нужно
+-- обращаться к таблице.
+CREATE INDEX ind_Clubs_ClubName ON Clubs USING BTREE (ClubName, ClubId);
+
+-- Индекс для быстрого нахождения участников клуба по id клуба, не нужно 
+-- обращаться к таблице. 
+CREATE INDEX ind_ClubMembers ON ClubMembers USING BTREE (ClubId, StudentId);
+
+-- Индекс дял быстрого join, не нужно обращаться к таблице.
+CREATE INDEX ind_Marks_StudentId ON Marks USING BTREE (StudentId, CourseId, Mark);
+
+-- Индекс для быстрого нахождения id курса по его названия, не нужно
+-- обращаться к таблице.
+CREATE INDEX ind_Courses_CourseName ON Courses USING BTREE (CourseName, CourseId);
+---------
+
+3.1.Q
+---------
+-- Находит всех студентов у которых есть незачет.
+SELECT COUNT(Mark), StudentId
+FROM Marks AS M
+WHERE Mark < 3
+GROUP BY StudentId;
+---------
+
+3.1.I
+---------
+-- Нужен для удобного поиска по диапазону оценки и группировке по студенту.
+CREATE INDEX ind_Marks_Mark ON Marks USING BTREE (Mark, StudentId);
+---------
+
+3.2.Q
+---------
+-- Находит всех студентов КТ 4 курса.
+SELECT StudentId
+FROM Students
+NATURAL JOIN Groups
+WHERE GroupName like 'M34%';
+---------
+
+3.2.I
+---------
+-- Нужен для поиска по префиксу.
+CREATE INDEX ind_Groups_GroupName ON Groups USING BTREE (GroupName);
+
+-- Нужен для быстрого join и уменьшения количества обращений к таблице.
+CREATE INDEX ind_Students_GroupId ON Students USING BTREE (GroupId, StudetId);
+---------
+
+3.3.Q
+---------
+-- Находит всех студентов, которые состоят в нескольких клубах одновременно.
+SELECT StudentId
+FROM ClubMembers
+GROUP BY StudentId
+HAVING COUNT(ClubId) >= 2;
+---------
+
+3.3.I
+---------
+-- Нужен для быстрой группировки по студентам и для быстрого подсчета количества клубов.
+CREATE INDEX ind_ClubMembers_StudentId ON ClubMembers USING BTREE (StudentId, ClubId);
+---------

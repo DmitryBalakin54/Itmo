@@ -1,0 +1,5 @@
+StudentsByMarkAndCourseId(StudentId, StudentName, GroupId) :-
+    Students(StudentId, StudentName, GroupId),
+    Marks(StudentId, CourseId, Mark),
+    CourseId = :CourseId,
+    Mark = :Mark.

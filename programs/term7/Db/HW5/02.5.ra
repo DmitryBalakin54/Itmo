@@ -1,0 +1,1 @@
+pi{StudentId, StudentName, GroupName}((ClubMembers njoin Students njoin Groups) njoin (s{HeadName = :StudentName}(Clubs njoin rho{ClubStudentHeadId = StudentId, HeadName = StudentName}(Students))))

@@ -1,0 +1,1 @@
+pi{StudentName1, StudentName2, ClubName}(s{StudentId1 < StudentId2}(rho{StudentId=StudentId1}(ClubMembers) njoin rho{StudentId=StudentId2}(ClubMembers)) njoin rho{StudentId=StudentId1,StudentName=StudentName1}(Students) njoin rho{StudentId=StudentId2, StudentName=StudentName2}(Students) njoin Clubs)

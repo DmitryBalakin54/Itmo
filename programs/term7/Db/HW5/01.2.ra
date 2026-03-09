@@ -1,0 +1,1 @@
+pi{StudentId, StudentName, GroupId}(s{StudentName = :StudentName}(Students))
