@@ -1,0 +1,29 @@
+user root has id 0
+user daemon has id 1
+user bin has id 2
+user sys has id 3
+user sync has id 4
+user games has id 5
+user man has id 6
+user lp has id 7
+user mail has id 8
+user news has id 9
+user uucp has id 10
+user proxy has id 13
+user www-data has id 33
+user backup has id 34
+user list has id 38
+user irc has id 39
+user _apt has id 42
+user nobody has id 65534
+user systemd-network has id 998
+user systemd-timesync has id 997
+user messagebus has id 100
+user avahi-autoipd has id 101
+user sshd has id 102
+user myuser has id 1000
+user u1 has id 1001
+Password for root changed last time on Sep 03, 2024
+All groups: root, daemon, bin, sys, adm, tty, disk, lp, mail, news, uucp, man, proxy, kmem, dialout, fax, voice, cdrom, floppy, tape, sudo, audio, dip, www-data, backup, operator, list, irc, src, shadow, utmp, video, sasl, plugdev, staff, games, users, nogroup, systemd-journal, systemd-network, crontab, input, sgx, kvm, render, netdev, systemd-timesync, messagebus, _ssh, avahi-autoipd, bluetooth, myuser, g1, u1
+user u1: u1(UID:1001), groups: u1(GID:1001), g1(GID:1002)
+g1 members: u1, user

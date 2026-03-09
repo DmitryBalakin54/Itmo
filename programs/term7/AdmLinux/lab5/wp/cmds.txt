@@ -1,0 +1,7 @@
+docker-compose up -d
+
+curl http://localhost:2077
+
+docker-compose down
+
+docker volume ls
